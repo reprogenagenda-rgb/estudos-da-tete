@@ -1,8 +1,8 @@
-# Estudos da Tété / AT V1.4
+# Estudos da Tété / AT V1.5
 
 App educativo infantil em PWA para GitHub Pages.
 
-## O que mudou na V1.4
+## O que mudou na V1.5
 
 - Nova sequência pedagógica: **Aula rápida → áudio → exemplo → quiz → revisão → desempenho**.
 - Cada matéria e ano abre primeiro uma tela de aula antes das questões.
@@ -37,7 +37,7 @@ icons/icon-512.png
 ## Mensagem de commit sugerida
 
 ```text
-Atualiza Estudos da Tété V1.4 com aulas antes do quiz
+Atualiza Estudos da Tété V1.5 com aulas ilustradas e respostas misturadas
 ```
 
 ## Checklist de aprovação
