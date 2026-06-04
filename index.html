@@ -1,0 +1,1150 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Estudos da Tété 🌟 | Tété Studies V1.1</title>
+<meta name="description" content="Estudos da Tété: app educativo PWA bilíngue PT/EN para estudos infantis com níveis, estrelas e progresso offline.">
+<meta name="theme-color" content="#FF6B35">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<style>
+:root{
+  --math:#FF6B35; --math-l:#FFF3CD; --math-d:#CC4A15;
+  --sci:#06B6D4;  --sci-l:#E0F7FA;  --sci-d:#0891B2;
+  --bio:#10B981;  --bio-l:#E8F5E9;  --bio-d:#059669;
+  --log:#8B5CF6;  --log-l:#EDE9FF;  --log-d:#7C3AED;
+  --dark:#1E1B18; --muted:#6B7280; --bg:#FFF8F0;
+  --gold:#F59E0B; --star:#FCD34D; --white:#fff;
+  --r:20px; --shadow:0 6px 24px rgba(0,0,0,.10);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'Nunito',sans-serif;background:var(--bg);min-height:100vh;overflow-x:hidden}
+
+/* ── SCREEN SYSTEM ─────────────────────────── */
+.screen{display:none;min-height:100vh;animation:fadeIn .3s ease}
+.screen.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes bounce{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pop{0%{transform:scale(.5);opacity:0}70%{transform:scale(1.2)}100%{transform:scale(1);opacity:1}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+@keyframes starPop{0%{transform:scale(0) rotate(-30deg);opacity:0}60%{transform:scale(1.3) rotate(5deg)}100%{transform:scale(1) rotate(0);opacity:1}}
+@keyframes slide-up{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+
+/* ── HOME ──────────────────────────────────── */
+#home{background:var(--bg)}
+.home-hero{
+  background:linear-gradient(135deg,#FF6B35 0%,#FF8C5A 40%,#FFD166 100%);
+  padding:40px 20px 30px;text-align:center;position:relative;overflow:hidden;
+}
+.home-hero::before{
+  content:'';position:absolute;top:-40px;right:-40px;
+  width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,.1);
+}
+.hero-emoji{font-size:52px;display:block;animation:bounce 2s infinite}
+.hero-title{font-family:'Fredoka One',sans-serif;font-size:32px;color:#fff;margin:8px 0 4px;
+  text-shadow:0 3px 10px rgba(0,0,0,.2)}
+.hero-sub{font-size:14px;color:rgba(255,255,255,.9);font-weight:600}
+.hero-streak{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(255,255,255,.2);border-radius:20px;padding:6px 16px;margin-top:12px;
+  font-size:13px;color:#fff;font-weight:700;
+}
+.subjects-grid{padding:20px 16px;display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.subject-card{
+  background:var(--white);border-radius:var(--r);padding:18px 14px;
+  box-shadow:var(--shadow);cursor:pointer;transition:transform .2s,box-shadow .2s;
+  border:2px solid transparent;position:relative;overflow:hidden;
+}
+.subject-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:5px;border-radius:var(--r) var(--r) 0 0;
+}
+.subject-card.math::before{background:var(--math)}
+.subject-card.sci::before{background:var(--sci)}
+.subject-card.bio::before{background:var(--bio)}
+.subject-card.log::before{background:var(--log)}
+.subject-card:active{transform:scale(.96)}
+.subject-icon{font-size:32px;display:block;margin-bottom:8px}
+.subject-name{font-weight:900;font-size:15px;color:var(--dark);margin-bottom:4px}
+.subject-grade{font-size:11px;color:var(--muted);font-weight:600;margin-bottom:8px}
+.level-dots{display:flex;gap:4px;flex-wrap:wrap}
+.level-dot{width:10px;height:10px;border-radius:50%;background:#E5E7EB;transition:background .3s}
+.level-dot.done{background:var(--gold)}
+.level-dot.active{background:var(--dark);animation:bounce 1.5s infinite}
+.home-footer{text-align:center;padding:12px;font-size:12px;color:var(--muted)}
+
+/* ── SUBJECT ───────────────────────────────── */
+.subj-header{padding:20px 20px 16px;color:#fff;display:flex;align-items:center;gap:12px}
+.back-btn{
+  background:rgba(255,255,255,.25);border:none;color:#fff;
+  width:38px;height:38px;border-radius:12px;font-size:18px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.subj-hinfo{flex:1}
+.subj-title{font-family:'Fredoka One',sans-serif;font-size:24px}
+.subj-subtitle{font-size:12px;opacity:.85;font-weight:600}
+#subj-screen{background:var(--bg)}
+.level-path{padding:20px 16px;display:flex;flex-direction:column;gap:12px}
+.level-node{
+  background:var(--white);border-radius:var(--r);padding:16px;
+  box-shadow:var(--shadow);display:flex;align-items:center;gap:14px;
+  cursor:pointer;transition:transform .2s;border:2px solid transparent;
+  position:relative;
+}
+.level-node.locked{opacity:.55;cursor:not-allowed;filter:grayscale(.4)}
+.level-node.current{border-width:3px}
+.level-node:not(.locked):active{transform:scale(.97)}
+.node-badge{
+  width:48px;height:48px;border-radius:14px;display:flex;align-items:center;
+  justify-content:center;font-family:'Fredoka One',sans-serif;font-size:20px;
+  color:#fff;flex-shrink:0;
+}
+.node-info{flex:1}
+.node-title{font-weight:800;font-size:14px;color:var(--dark)}
+.node-topic{font-size:12px;color:var(--muted);margin-top:2px}
+.node-stars{display:flex;gap:2px;margin-top:6px}
+.node-star{font-size:16px;opacity:.25}
+.node-star.earned{opacity:1;animation:starPop .4s ease forwards}
+.node-lock{font-size:20px;color:#9CA3AF}
+.node-play-btn{
+  background:var(--dark);color:#fff;border:none;border-radius:12px;
+  padding:8px 16px;font-family:'Nunito',sans-serif;font-weight:800;
+  font-size:13px;cursor:pointer;
+}
+.node-play-btn.completed{background:#E5E7EB;color:var(--muted)}
+
+/* ── QUIZ ──────────────────────────────────── */
+#quiz-screen{background:var(--bg)}
+.quiz-header{padding:16px 16px 12px;display:flex;align-items:center;gap:10px}
+.quiz-subj-tag{
+  flex:1;display:flex;align-items:center;gap:8px;
+  background:var(--white);border-radius:12px;padding:8px 12px;box-shadow:0 2px 8px rgba(0,0,0,.06);
+}
+.quiz-subj-icon{font-size:20px}
+.quiz-subj-name{font-weight:800;font-size:13px;color:var(--dark)}
+.quiz-lvl-tag{font-size:11px;color:var(--muted);font-weight:600}
+.quiz-score{
+  background:var(--dark);color:#fff;border-radius:12px;
+  padding:8px 14px;font-weight:800;font-size:14px;white-space:nowrap;
+}
+.progress-bar-wrap{padding:0 16px 8px;display:flex;align-items:center;gap:10px}
+.progress-bar{flex:1;height:10px;background:#E5E7EB;border-radius:10px;overflow:hidden}
+.progress-fill{height:100%;border-radius:10px;transition:width .4s cubic-bezier(.4,0,.2,1)}
+.progress-text{font-size:12px;color:var(--muted);font-weight:700;white-space:nowrap}
+.question-card{
+  margin:4px 16px 12px;background:var(--white);border-radius:var(--r);
+  padding:20px;box-shadow:var(--shadow);min-height:100px;
+}
+.question-text{font-weight:800;font-size:16px;color:var(--dark);line-height:1.5}
+.options-grid{padding:0 16px;display:flex;flex-direction:column;gap:10px}
+.option-btn{
+  background:var(--white);border:2.5px solid #E5E7EB;border-radius:14px;
+  padding:14px 16px;text-align:left;cursor:pointer;
+  font-family:'Nunito',sans-serif;font-weight:700;font-size:14px;color:var(--dark);
+  transition:all .15s;display:flex;align-items:center;gap:12px;
+  box-shadow:0 2px 8px rgba(0,0,0,.04);
+}
+.option-btn:active{transform:scale(.97)}
+.option-btn.correct{background:#D1FAE5;border-color:#10B981;color:#065F46}
+.option-btn.wrong{background:#FEE2E2;border-color:#EF4444;color:#991B1B;animation:shake .3s ease}
+.option-btn.disabled{pointer-events:none}
+.option-letter{
+  width:30px;height:30px;border-radius:8px;background:#F3F4F6;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:900;font-size:13px;flex-shrink:0;transition:background .15s;
+}
+.option-btn.correct .option-letter{background:#10B981;color:#fff}
+.option-btn.wrong .option-letter{background:#EF4444;color:#fff}
+.feedback-box{
+  margin:12px 16px 0;background:var(--white);border-radius:14px;
+  padding:14px 16px;border-left:4px solid #10B981;
+  box-shadow:0 2px 10px rgba(0,0,0,.06);animation:slide-up .25s ease;
+  display:none;
+}
+.feedback-box.visible{display:block}
+.feedback-box.wrong-fb{border-color:#EF4444}
+.feedback-emoji{font-size:18px;margin-right:6px}
+.feedback-text{font-size:13px;color:var(--dark);font-weight:600;line-height:1.5}
+.next-btn{
+  margin:14px 16px 20px;width:calc(100% - 32px);
+  padding:16px;background:var(--dark);color:#fff;border:none;border-radius:14px;
+  font-family:'Nunito',sans-serif;font-weight:900;font-size:16px;cursor:pointer;
+  transition:transform .1s;display:none;
+}
+.next-btn.visible{display:block}
+.next-btn:active{transform:scale(.97)}
+
+/* ── RESULT ─────────────────────────────────── */
+#result-screen{background:var(--bg);text-align:center}
+.result-header{padding:32px 20px 16px}
+.result-emoji-big{font-size:72px;display:block;animation:pop .5s ease forwards}
+.result-title{font-family:'Fredoka One',sans-serif;font-size:28px;color:var(--dark);margin:12px 0 4px}
+.result-sub{font-size:15px;color:var(--muted);font-weight:600}
+.stars-display{display:flex;justify-content:center;gap:12px;margin:20px 0;padding:0 40px}
+.big-star{font-size:48px;opacity:.2;transition:all .4s}
+.big-star.earned{opacity:1;animation:starPop .5s ease forwards}
+.big-star.earned:nth-child(2){animation-delay:.15s}
+.big-star.earned:nth-child(3){animation-delay:.3s}
+.score-circle{
+  width:110px;height:110px;border-radius:50%;margin:0 auto 20px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  font-family:'Fredoka One',sans-serif;color:#fff;box-shadow:0 8px 30px rgba(0,0,0,.15);
+}
+.score-num{font-size:36px;line-height:1}
+.score-denom{font-size:14px;opacity:.85}
+.level-up-banner{
+  margin:0 20px 16px;background:linear-gradient(135deg,var(--gold),#F97316);
+  border-radius:16px;padding:16px 20px;color:#fff;display:none;
+}
+.level-up-banner.visible{display:block;animation:pop .5s .3s ease both}
+.level-up-title{font-family:'Fredoka One',sans-serif;font-size:20px;margin-bottom:4px}
+.level-up-sub{font-size:13px;opacity:.9;font-weight:600}
+.result-msg{margin:0 20px 16px;background:var(--white);border-radius:16px;
+  padding:14px 18px;box-shadow:var(--shadow);font-size:14px;color:var(--dark);font-weight:600;
+  line-height:1.6;text-align:left}
+.result-btns{padding:0 20px 32px;display:flex;flex-direction:column;gap:10px}
+.btn-primary{
+  padding:16px;background:var(--dark);color:#fff;border:none;border-radius:14px;
+  font-family:'Nunito',sans-serif;font-weight:900;font-size:16px;cursor:pointer;
+}
+.btn-secondary{
+  padding:14px;background:var(--white);color:var(--dark);border:2px solid #E5E7EB;
+  border-radius:14px;font-family:'Nunito',sans-serif;font-weight:800;font-size:15px;cursor:pointer;
+}
+.confetti-container{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:999}
+.confetti-piece{position:absolute;width:10px;height:10px;border-radius:2px;animation:confettiFall linear forwards}
+@keyframes confettiFall{
+  0%{transform:translateY(-20px) rotate(0);opacity:1}
+  100%{transform:translateY(105vh) rotate(720deg);opacity:0}
+}
+
+/* ── GRADE COLORS ──────────────────────────── */
+.c-math{background:var(--math)}.c-sci{background:var(--sci)}
+.c-bio{background:var(--bio)}.c-log{background:var(--log)}
+.t-math{color:var(--math)}.t-sci{color:var(--sci)}
+.t-bio{color:var(--bio)}.t-log{color:var(--log)}
+.border-math{border-color:var(--math)}.border-sci{border-color:var(--sci)}
+.border-bio{border-color:var(--bio)}.border-log{border-color:var(--log)}
+.progress-math{background:var(--math)}.progress-sci{background:var(--sci)}
+.progress-bio{background:var(--bio)}.progress-log{background:var(--log)}
+
+
+/* ── LANGUAGE / BILINGUAL UI ───────────────── */
+.lang-switch{
+  position:absolute;top:14px;right:14px;z-index:5;
+  display:flex;gap:6px;background:rgba(255,255,255,.22);
+  padding:5px;border-radius:999px;backdrop-filter:blur(6px);
+}
+.lang-btn{
+  border:none;border-radius:999px;padding:7px 11px;
+  font-family:'Nunito',sans-serif;font-weight:900;font-size:12px;
+  color:#fff;background:transparent;cursor:pointer;
+}
+.lang-btn.active{background:#fff;color:var(--dark);box-shadow:0 2px 8px rgba(0,0,0,.14)}
+.bilingual-note{
+  margin:0 16px 14px;background:#fff;border-radius:16px;padding:12px 14px;
+  box-shadow:0 2px 12px rgba(0,0,0,.06);font-size:12px;color:var(--muted);font-weight:700;line-height:1.45;
+}
+
+/* ── SCROLLBAR ─────────────────────────────── */
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-thumb{background:#DDD5CC;border-radius:4px}
+</style>
+</head>
+<body>
+
+<!-- ══════════ HOME ══════════ -->
+<div id="home" class="screen active">
+  <div class="home-hero">
+    <div class="lang-switch" aria-label="Selecionar idioma / Select language">
+      <button class="lang-btn active" id="lang-pt" onclick="setLang('pt')">PT</button>
+      <button class="lang-btn" id="lang-en" onclick="setLang('en')">EN</button>
+    </div>
+    <span class="hero-emoji">🌟</span>
+    <h1 class="hero-title">Estudos da Tété</h1>
+    <p class="hero-sub" id="hero-sub">Aprender brincando</p>
+    <div class="hero-streak" id="streak-badge">🔥 <span id="streak-label">Sequência:</span> <span id="streak-count">0</span> <span id="streak-days">dias</span></div>
+  </div>
+  <div class="bilingual-note" id="bilingual-note">🇧🇷 Português como padrão. 🇺🇸 Interface em inglês disponível; o banco completo de perguntas traduzidas fica planejado para a V1.2.</div>
+  <div class="subjects-grid">
+    <div class="subject-card math" onclick="openSubject('math')">
+      <span class="subject-icon">🔢</span>
+      <div class="subject-name" id="name-math">Matemática</div>
+      <div class="subject-grade" id="grade-math">2º Ano</div>
+      <div class="level-dots" id="dots-math"></div>
+    </div>
+    <div class="subject-card sci" onclick="openSubject('sci')">
+      <span class="subject-icon">🔭</span>
+      <div class="subject-name" id="name-sci">Ciências</div>
+      <div class="subject-grade" id="grade-sci">2º Ano</div>
+      <div class="level-dots" id="dots-sci"></div>
+    </div>
+    <div class="subject-card bio" onclick="openSubject('bio')">
+      <span class="subject-icon">🌿</span>
+      <div class="subject-name" id="name-bio">Biologia</div>
+      <div class="subject-grade" id="grade-bio">2º Ano</div>
+      <div class="level-dots" id="dots-bio"></div>
+    </div>
+    <div class="subject-card log" onclick="openSubject('log')">
+      <span class="subject-icon">🧩</span>
+      <div class="subject-name" id="name-log">Lógica</div>
+      <div class="subject-grade" id="grade-log">2º Ano</div>
+      <div class="level-dots" id="dots-log"></div>
+    </div>
+  </div>
+  <div class="home-footer" id="home-footer">✨ Responda bem para subir de nível!</div>
+</div>
+
+<!-- ══════════ SUBJECT ══════════ -->
+<div id="subj-screen" class="screen">
+  <div class="subj-header" id="subj-hdr">
+    <button class="back-btn" onclick="goHome()">←</button>
+    <div class="subj-hinfo">
+      <div class="subj-title" id="subj-title-text"></div>
+      <div class="subj-subtitle" id="subj-sub-text"></div>
+    </div>
+    <span style="font-size:36px" id="subj-icon-big"></span>
+  </div>
+  <div class="level-path" id="level-path"></div>
+</div>
+
+<!-- ══════════ QUIZ ══════════ -->
+<div id="quiz-screen" class="screen">
+  <div class="quiz-header">
+    <div class="quiz-subj-tag">
+      <span class="quiz-subj-icon" id="q-icon"></span>
+      <div>
+        <div class="quiz-subj-name" id="q-subj-name"></div>
+        <div class="quiz-lvl-tag" id="q-lvl-name"></div>
+      </div>
+    </div>
+    <div class="quiz-score"><span id="correct-count">0</span>✓ <span id="wrong-count">0</span>✗</div>
+  </div>
+  <div class="progress-bar-wrap">
+    <div class="progress-bar"><div class="progress-fill" id="prog-fill"></div></div>
+    <div class="progress-text"><span id="q-num">1</span>/<span id="q-total">8</span></div>
+  </div>
+  <div class="question-card"><div class="question-text" id="question-text"></div></div>
+  <div class="options-grid" id="options-grid"></div>
+  <div class="feedback-box" id="feedback-box">
+    <span class="feedback-emoji" id="fb-emoji"></span>
+    <span class="feedback-text" id="fb-text"></span>
+  </div>
+  <button class="next-btn" id="next-btn" onclick="nextQuestion()">Próxima →</button>
+</div>
+
+<!-- ══════════ RESULT ══════════ -->
+<div id="result-screen" class="screen">
+  <div class="result-header">
+    <span class="result-emoji-big" id="result-emoji">🎉</span>
+    <div class="result-title" id="result-title">Incrível!</div>
+    <div class="result-sub" id="result-sub"></div>
+  </div>
+  <div class="stars-display">
+    <span class="big-star" id="star1">⭐</span>
+    <span class="big-star" id="star2">⭐</span>
+    <span class="big-star" id="star3">⭐</span>
+  </div>
+  <div class="score-circle" id="score-circle">
+    <div class="score-num" id="score-num">0</div>
+    <div class="score-denom" id="score-denom">de 8</div>
+  </div>
+  <div class="level-up-banner" id="level-up-banner">
+    <div class="level-up-title" id="level-up-title">🚀 Nível Desbloqueado!</div>
+    <div class="level-up-sub" id="level-up-text"></div>
+  </div>
+  <div class="result-msg" id="result-msg"></div>
+  <div class="result-btns">
+    <button class="btn-primary" id="result-action-btn" onclick="resultAction()"></button>
+    <button class="btn-secondary" id="home-btn" onclick="goHome()">🏠 Início</button>
+  </div>
+</div>
+
+<div class="confetti-container" id="confetti-container"></div>
+
+<script>
+// ════════════════════════════════════════════
+// DATA — CURRICULUM
+// ════════════════════════════════════════════
+const GRADES = {
+  pt:['2º Ano','3º Ano','4º Ano','5º Ano','6º Ano'],
+  en:['2nd Grade','3rd Grade','4th Grade','5th Grade','6th Grade']
+};
+const TOPICS = {
+  pt:{
+    math:['Números e Operações','Multiplicação e Frações','Área e Geometria','Decimais e Porcentagem','Álgebra e Proporcionalidade'],
+    sci: ['Natureza e Seres Vivos','Ecossistemas e Matéria','Sistema Solar e Corpo Humano','Célula e Clima','Física e Química Básica'],
+    bio: ['Seres Vivos','Classificação dos Animais','Corpo Humano','Ecologia e Genética','Genética Avançada'],
+    log: ['Sequências e Padrões','Analogias e Problemas','Raciocínio Lógico','Problemas Complexos','Lógica Avançada']
+  },
+  en:{
+    math:['Numbers and Operations','Multiplication and Fractions','Area and Geometry','Decimals and Percentages','Algebra and Proportionality'],
+    sci: ['Nature and Living Things','Ecosystems and Matter','Solar System and Human Body','Cells and Climate','Basic Physics and Chemistry'],
+    bio: ['Living Things','Animal Classification','Human Body','Ecology and Genetics','Advanced Genetics'],
+    log: ['Sequences and Patterns','Analogies and Problems','Logical Reasoning','Complex Problems','Advanced Logic']
+  }
+};
+const ICONS = {math:'🔢',sci:'🔭',bio:'🌿',log:'🧩'};
+const NAMES = {
+  pt:{math:'Matemática',sci:'Ciências',bio:'Biologia',log:'Lógica'},
+  en:{math:'Math',sci:'Science',bio:'Biology',log:'Logic'}
+};
+const UI = {
+  pt:{
+    heroSub:'Aprender brincando', streak:'Sequência:', days:'dias',
+    note:'🇧🇷 Português como padrão. 🇺🇸 Interface em inglês disponível; o banco completo de perguntas traduzidas fica planejado para a V1.2.',
+    footer:'✨ Responda bem para subir de nível!', current:'atual', totalLevels:'5 níveis no total',
+    replay:'🔄 Refazer', play:'▶ Jogar', next:'Próxima →', result:'Ver Resultado ✓',
+    correct:'Correto! ', almost:'Quase! ', of:'de', rightAnswers:'respostas certas',
+    perfect:'Perfeição!', amazing:'Incrível!', almostThere:'Quase lá!',
+    unlockedTitle:'🚀 Nível Desbloqueado!', unlocked:'Você desbloqueou', keepGoing:'Continue assim! 🌟',
+    msgPerfect:'🌟 Nota 10! Você acertou tudo! Você é uma verdadeira especialista em {subj}! Continue explorando!',
+    msgExcellent:'🎯 Excelente! {score} acertos — você dominou este conteúdo muito bem!',
+    msgPassed:'✅ Parabéns! {score} acertos — você passou de fase! O próximo nível foi desbloqueado!',
+    msgReview:'📚 Bom esforço! Você acertou {score}. Precisa de {pass} para avançar. Revise e tente de novo!',
+    msgTry:'💡 Não desista! Você acertou {score}. Tente de novo — cada erro é uma lição! O cérebro aprende errando.',
+    tryLevel:'🚀 Tentar', playAgain:'🔄 Jogar Novamente', tryAgain:'💪 Tentar de Novo', home:'🏠 Início'
+  },
+  en:{
+    heroSub:'Learn by playing', streak:'Streak:', days:'days',
+    note:'🇧🇷 Portuguese is the default. 🇺🇸 English interface is available; the fully translated question bank is planned for V1.2.',
+    footer:'✨ Answer well to level up!', current:'current', totalLevels:'5 levels total',
+    replay:'🔄 Replay', play:'▶ Play', next:'Next →', result:'See Result ✓',
+    correct:'Correct! ', almost:'Almost! ', of:'of', rightAnswers:'right answers',
+    perfect:'Perfect!', amazing:'Amazing!', almostThere:'Almost there!',
+    unlockedTitle:'🚀 Level Unlocked!', unlocked:'You unlocked', keepGoing:'Keep going! 🌟',
+    msgPerfect:'🌟 Perfect score! You got everything right! You are a true {subj} expert! Keep exploring!',
+    msgExcellent:'🎯 Excellent! {score} correct answers — you mastered this content very well!',
+    msgPassed:'✅ Congratulations! {score} correct answers — you passed this level! The next level is unlocked!',
+    msgReview:'📚 Good effort! You got {score}. You need {pass} to move forward. Review and try again!',
+    msgTry:'💡 Do not give up! You got {score}. Try again — every mistake is a lesson! The brain learns by trying.',
+    tryLevel:'🚀 Try', playAgain:'🔄 Play Again', tryAgain:'💪 Try Again', home:'🏠 Home'
+  }
+};
+function lang(){ return state.lang || 'pt'; }
+function gradeName(i){ return GRADES[lang()][i]; }
+function subjectName(s){ return NAMES[lang()][s]; }
+function topicName(s,i){ return TOPICS[lang()][s][i]; }
+function text(k){ return UI[lang()][k] || UI.pt[k] || k; }
+
+// Question format: {q, o:[4 options], a:correct_index, e:explanation}
+const QUESTIONS = {
+math:[
+// ── Level 0: 2º Ano ──
+[
+{q:"Quanto é 15 + 8?",o:["21","22","23","24"],a:2,e:"15 + 8 = 23. Conta mais 8 a partir do 15!"},
+{q:"Maria tinha 20 balas e comeu 7. Quantas sobraram?",o:["11","12","13","14"],a:2,e:"20 − 7 = 13 balas sobraram."},
+{q:"Quantas dezenas há no número 34?",o:["4","3","34","7"],a:1,e:"34 = 3 dezenas + 4 unidades."},
+{q:"Complete a sequência: 5, 10, 15, __, __",o:["18 e 21","20 e 25","16 e 17","20 e 24"],a:1,e:"Soma 5 a cada vez: 20, 25."},
+{q:"Qual é o maior número? 45, 54, 44, 55",o:["45","54","44","55"],a:3,e:"55 é o maior porque tem 5 dezenas e 5 unidades."},
+{q:"Quanto é 30 + 40?",o:["34","60","70","43"],a:2,e:"30 + 40 = 70. Soma as dezenas!"},
+{q:"Pedro tinha 12 figurinhas e ganhou 9. Quantas tem?",o:["19","20","21","22"],a:2,e:"12 + 9 = 21 figurinhas."},
+{q:"Qual forma tem 4 lados iguais e 4 ângulos retos?",o:["Triângulo","Círculo","Quadrado","Retângulo"],a:2,e:"O quadrado tem 4 lados iguais e 4 ângulos retos."},
+{q:"Quanto é 50 − 18?",o:["32","38","42","28"],a:0,e:"50 − 18 = 32."},
+{q:"Qual número vem depois de 99?",o:["90","100","91","98"],a:1,e:"Depois de 99 vem 100 — começa a centena!"},
+],
+// ── Level 1: 3º Ano ──
+[
+{q:"Quanto é 6 × 4?",o:["10","24","20","28"],a:1,e:"6 × 4 = 24. Ou 6+6+6+6 = 24."},
+{q:"Quanto é 35 ÷ 5?",o:["5","6","7","8"],a:2,e:"35 ÷ 5 = 7. (5 × 7 = 35)"},
+{q:"Uma sala tem 6 fileiras com 5 cadeiras. Quantas cadeiras?",o:["11","25","30","28"],a:2,e:"6 × 5 = 30 cadeiras."},
+{q:"Qual fração representa metade?",o:["1/4","1/3","2/3","1/2"],a:3,e:"1/2 significa 1 de 2 partes iguais — metade!"},
+{q:"Quanto é 7 × 8?",o:["54","56","48","63"],a:1,e:"7 × 8 = 56."},
+{q:"Quanto é 100 ÷ 4?",o:["20","25","40","50"],a:1,e:"100 ÷ 4 = 25. (4 × 25 = 100)"},
+{q:"Metade de 18 é...",o:["6","8","9","10"],a:2,e:"18 ÷ 2 = 9."},
+{q:"Se 1kg tem 1000g, quanto é meio kg?",o:["200g","500g","750g","100g"],a:1,e:"500g = metade de 1000g."},
+{q:"1/4 de 20 é...",o:["4","5","8","10"],a:1,e:"20 ÷ 4 = 5. Um quarto de 20 é 5."},
+{q:"8 laranjas em cada caixa × 5 caixas = ?",o:["13","35","40","45"],a:2,e:"8 × 5 = 40 laranjas."},
+],
+// ── Level 2: 4º Ano ──
+[
+{q:"Quanto é 123 × 4?",o:["412","492","482","452"],a:1,e:"123 × 4 = 492."},
+{q:"Quanto é 144 ÷ 12?",o:["10","11","12","13"],a:2,e:"12 × 12 = 144, então 144 ÷ 12 = 12."},
+{q:"Área de um retângulo 5 cm × 8 cm?",o:["26 cm²","40 cm²","13 cm²","35 cm²"],a:1,e:"Área = lado × lado = 5 × 8 = 40 cm²."},
+{q:"3/4 de 100 é...",o:["25","50","75","80"],a:2,e:"100 ÷ 4 × 3 = 75."},
+{q:"Qual é o perímetro de um quadrado de lado 6 cm?",o:["12 cm","18 cm","24 cm","36 cm"],a:2,e:"Perímetro = 4 × 6 = 24 cm."},
+{q:"Quanto é 15 × 12?",o:["160","170","180","190"],a:2,e:"15 × 12 = 180."},
+{q:"Fração equivalente a 2/4?",o:["3/4","1/2","2/3","3/6"],a:1,e:"2/4 = 1/2 — simplifica dividindo por 2."},
+{q:"500 ÷ 25 = ?",o:["15","18","20","25"],a:2,e:"500 ÷ 25 = 20. (25 × 20 = 500)"},
+{q:"3² (três ao quadrado) = ?",o:["6","8","9","12"],a:2,e:"3² = 3 × 3 = 9."},
+{q:"Qual é maior: 2/3 ou 3/4?",o:["2/3","3/4","São iguais","Impossível saber"],a:1,e:"3/4 = 0,75 e 2/3 ≈ 0,67. Então 3/4 é maior."},
+],
+// ── Level 3: 5º Ano ──
+[
+{q:"Quanto é 0,5 + 0,7?",o:["0,12","1,2","1,02","0,57"],a:1,e:"0,5 + 0,7 = 1,2"},
+{q:"50% de 80 é...",o:["20","30","40","50"],a:2,e:"50% = metade. 80 ÷ 2 = 40."},
+{q:"Quanto é 2,5 × 4?",o:["6","8","10","12"],a:2,e:"2,5 × 4 = 10."},
+{q:"30% de 150 = ?",o:["30","40","45","50"],a:2,e:"150 × 0,30 = 45."},
+{q:"Qual é maior: 0,3 ou 0,25?",o:["0,25","0,3","São iguais","0,30 = 0,3"],a:1,e:"0,30 > 0,25. Basta comparar: 30 > 25."},
+{q:"1,5 − 0,8 = ?",o:["0,6","0,7","0,8","0,9"],a:1,e:"1,5 − 0,8 = 0,7."},
+{q:"MMC de 4 e 6 = ?",o:["2","8","12","24"],a:2,e:"Múltiplos de 4: 4,8,12... de 6: 6,12... MMC = 12."},
+{q:"75% como fração simplificada = ?",o:["1/4","3/4","2/3","7/5"],a:1,e:"75% = 75/100 = 3/4."},
+{q:"Quanto é 3,14 × 2?",o:["5,14","6,28","6,14","5,28"],a:1,e:"3,14 × 2 = 6,28."},
+{q:"Qual é o MDC de 12 e 18?",o:["2","3","6","9"],a:2,e:"Divisores de 12: 1,2,3,4,6,12. De 18: 1,2,3,6,9,18. MDC = 6."},
+],
+// ── Level 4: 6º Ano ──
+[
+{q:"Se x + 5 = 12, quanto é x?",o:["5","6","7","8"],a:2,e:"x = 12 − 5 = 7."},
+{q:"3x = 21. Quanto é x?",o:["5","6","7","8"],a:2,e:"x = 21 ÷ 3 = 7."},
+{q:"Se 2 cadernos custam R$10, quanto custam 5 cadernos?",o:["R$20","R$25","R$30","R$15"],a:1,e:"Regra de três: 2→10, 5→25."},
+{q:"Média de 4, 6, 8 e 10 = ?",o:["6","7","8","9"],a:1,e:"(4+6+8+10) ÷ 4 = 28 ÷ 4 = 7."},
+{q:"Quanto é −3 + 8?",o:["−5","5","11","−11"],a:1,e:"−3 + 8 = 5. Avança 8 a partir do −3."},
+{q:"Raiz quadrada de 64 = ?",o:["6","7","8","9"],a:2,e:"8 × 8 = 64. √64 = 8."},
+{q:"Se velocidade = 60 km/h, em 3h percorre...?",o:["120 km","150 km","180 km","200 km"],a:2,e:"60 × 3 = 180 km."},
+{q:"Moda de: 2, 3, 3, 4, 5, 3, 2 = ?",o:["2","3","4","5"],a:1,e:"3 aparece 3 vezes — é o mais frequente!"},
+{q:"Razão 6:9 simplificada = ?",o:["1:2","2:3","3:4","1:3"],a:1,e:"Divide tudo por 3: 6÷3 = 2, 9÷3 = 3. Fica 2:3."},
+{q:"40% de x = 20. Quanto é x?",o:["40","50","60","80"],a:1,e:"x = 20 ÷ 0,40 = 50."},
+]
+],
+
+sci:[
+// ── Level 0: 2º Ano ──
+[
+{q:"Do que as plantas precisam para crescer?",o:["Só água","Água, luz e solo","Só luz solar","Só adubo"],a:1,e:"Plantas precisam de água, luz solar e solo com nutrientes!"},
+{q:"Qual destes é um mamífero?",o:["Cobra","Pinguim","Cachorro","Jacaré"],a:2,e:"Cachorro é mamífero — amamenta os filhotes e tem pelos!"},
+{q:"O ciclo da água começa com qual processo?",o:["Chuva","Evaporação","Condensação","Infiltração"],a:1,e:"A água dos rios e mares evapora com o calor do sol!"},
+{q:"Qual sentido usamos para ouvir?",o:["Visão","Olfato","Tato","Audição"],a:3,e:"A audição é o sentido dos ouvidos!"},
+{q:"Sol, Lua e estrelas são chamados de...",o:["Planetas","Astros","Satélites","Nuvens"],a:1,e:"Astros são todos os corpos celestes (Sol, Lua, estrelas, planetas)!"},
+{q:"Quais são os 3 estados da água?",o:["Quente, fria e gelada","Sólido, líquido e gasoso","Chuva, neve e rio","Vapor, gelo e mar"],a:1,e:"Gelo (sólido), água (líquido) e vapor (gasoso)!"},
+{q:"Uma borboleta começa sua vida como...",o:["Pupa","Larva","Ovo","Adulto"],a:2,e:"A borboleta nasce de um ovo, vira larva (lagarta), depois pupa e borboleta!"},
+{q:"O que as plantas fazem com a luz solar?",o:["Respiram","Produzem alimento (fotossíntese)","Bebem água","Dormem"],a:1,e:"Fotossíntese: as plantas usam luz, água e CO₂ para fazer alimento!"},
+{q:"Qual animal é um réptil?",o:["Pato","Cobra","Peixe","Coelho"],a:1,e:"A cobra é réptil — pele escamosa, sangue frio!"},
+{q:"Por que o céu é azul durante o dia?",o:["Causa da lua","Reflexo do mar","Espalhamento da luz solar na atmosfera","Cor das nuvens"],a:2,e:"A luz solar espalhada pela atmosfera torna o céu azul!"},
+],
+// ── Level 1: 3º Ano ──
+[
+{q:"O que é um ecossistema?",o:["Só os animais de um lugar","Conjunto de seres vivos e o ambiente","Tipos de clima","Coleção de plantas"],a:1,e:"Ecossistema = seres vivos + ambiente físico interagindo!"},
+{q:"Na cadeia alimentar, as plantas são chamadas de...",o:["Consumidores","Decompositores","Produtores","Predadores"],a:2,e:"Plantas produzem seu próprio alimento — são produtoras!"},
+{q:"Quando a água esquenta e vira vapor, chama-se...",o:["Condensação","Precipitação","Evaporação","Infiltração"],a:2,e:"Evaporação: líquido → gasoso pelo calor!"},
+{q:"Animal que come somente plantas é...",o:["Carnívoro","Onívoro","Herbívoro","Detritívoro"],a:2,e:"Herbívoro vem de 'herba' (planta)!"},
+{q:"O que é decomposição?",o:["Animais caçando","Plantas crescendo","Chuva caindo","Transformação de matéria orgânica morta"],a:3,e:"Fungos e bactérias decompõem matéria morta, reciclando nutrientes!"},
+{q:"Qual é a camada da Terra onde vivemos?",o:["Manto","Núcleo","Crosta","Magma"],a:2,e:"Vivemos na crosta terrestre, a camada mais externa!"},
+{q:"Poluição afeta principalmente...",o:["Só os animais","Só as plantas","Ar, água e solo","Somente os rios"],a:2,e:"A poluição contamina o ar que respiramos, a água e o solo!"},
+{q:"O que são predadores?",o:["Animais que são caçados","Animais que caçam outros","Plantas carnívoras","Parasitas"],a:1,e:"Predador caça e come a presa!"},
+{q:"Por que não vemos o ar?",o:["Está muito longe","É incolor e transparente","É invisível para todos os seres","Só existe à noite"],a:1,e:"O ar é uma mistura de gases incolores e transparentes!"},
+{q:"O que a clorofila faz nas plantas?",o:["Absorve água","Capta luz solar para fotossíntese","Elimina CO₂","Produz flores"],a:1,e:"A clorofila captura a luz solar — ela que dá cor verde às folhas!"},
+],
+// ── Level 2: 4º Ano ──
+[
+{q:"Quantos planetas tem o Sistema Solar?",o:["7","8","9","10"],a:1,e:"São 8: Mercúrio, Vênus, Terra, Marte, Júpiter, Saturno, Urano, Netuno."},
+{q:"Qual é o maior planeta do Sistema Solar?",o:["Saturno","Terra","Júpiter","Netuno"],a:2,e:"Júpiter é o maior — mais de 1.000 Terras caberiam nele!"},
+{q:"O coração bombeia o quê pelo corpo?",o:["Ar","Sangue","Linfa","Água"],a:1,e:"O coração é a bomba do corpo — circula o sangue!"},
+{q:"A Terra demora quanto para orbitar o Sol?",o:["24 horas","30 dias","365 dias","100 anos"],a:2,e:"365 dias = 1 ano. É o tempo de uma órbita completa ao redor do Sol!"},
+{q:"O que são vertebrados?",o:["Animais com 4 patas","Animais com coluna vertebral","Animais marinhos","Animais que voam"],a:1,e:"Vertebrados têm coluna: peixes, anfíbios, répteis, aves e mamíferos!"},
+{q:"A digestão começa em qual órgão?",o:["Estômago","Intestino","Boca","Fígado"],a:2,e:"Na boca! Os dentes trituram e a saliva já inicia a digestão."},
+{q:"Qual órgão realiza a troca de gases (O₂ e CO₂)?",o:["Coração","Rins","Pulmões","Fígado"],a:2,e:"Pulmões absorvem O₂ e eliminam CO₂."},
+{q:"O que é um satélite natural?",o:["Um planeta","Um astro que orbita um planeta","Uma estrela pequena","Um meteorito"],a:1,e:"A Lua é o satélite natural da Terra — orbita nosso planeta!"},
+{q:"Qual sentido é o mais rápido no ser humano?",o:["Olfato","Visão","Tato","Audição"],a:1,e:"A visão processa informações em milissegundos!"},
+{q:"O que acontece no sistema digestivo?",o:["Produção de sangue","Troca de gases","Transformação de alimentos em nutrientes","Filtração do sangue"],a:2,e:"O sistema digestivo quebra alimentos em nutrientes para o corpo usar!"},
+],
+// ── Level 3: 5º Ano ──
+[
+{q:"Quem descreveu a teoria da evolução das espécies?",o:["Isaac Newton","Albert Einstein","Charles Darwin","Louis Pasteur"],a:2,e:"Charles Darwin publicou 'A Origem das Espécies' em 1859!"},
+{q:"O que é o efeito estufa?",o:["Cultivo de plantas","Retenção excessiva de calor na atmosfera","Buracos no céu","Tipo de vulcão"],a:1,e:"Gases retêm calor na Terra — essencial em equilíbrio, perigoso em excesso!"},
+{q:"Qual gás as plantas absorvem para fotossíntese?",o:["O₂ (oxigênio)","N₂ (nitrogênio)","CO₂ (dióxido de carbono)","H₂ (hidrogênio)"],a:2,e:"Plantas absorvem CO₂ e liberam O₂ — nosso ar depende delas!"},
+{q:"O que é biodiversidade?",o:["Variedade de rios","Diversidade de seres vivos em um lugar","Tipos de rochas","Espécies extintas"],a:1,e:"Biodiversidade = riqueza de espécies diferentes em um ecossistema!"},
+{q:"O que são combustíveis fósseis?",o:["Combustíveis do futuro","Petróleo, carvão e gás natural","Energias renováveis","Madeira e carvão vegetal"],a:1,e:"Formados há milhões de anos de matéria orgânica: petróleo, gás, carvão!"},
+{q:"A temperatura é medida em qual unidade no Brasil?",o:["Kelvin","Fahrenheit","Graus Celsius","Joules"],a:2,e:"No Brasil usamos graus Celsius (°C)!"},
+{q:"O que é um vírus?",o:["Ser vivo com células","Fungo microscópico","Partícula que infecta células","Tipo de bactéria"],a:2,e:"Vírus não são células — são partículas que só se reproduzem dentro de outras células!"},
+{q:"Por que o buraco na camada de ozônio é perigoso?",o:["Deixa entrar mais chuva","Aumenta a passagem de raios UV","Resfria a Terra","Polui o ar"],a:1,e:"Sem o ozônio, raios UV chegam em excesso causando câncer de pele!"},
+{q:"O que é energia renovável?",o:["Energia que se esgota","Energia do petróleo","Energia que se renova naturalmente","Energia nuclear"],a:2,e:"Solar, eólica, hídrica são renováveis — não se esgotam!"},
+{q:"Qual é a camada da atmosfera mais próxima da Terra?",o:["Estratosfera","Mesosfera","Troposfera","Ionosfera"],a:2,e:"Troposfera: onde vivemos e ocorre o clima. Vai até ~12km de altitude!"},
+],
+// ── Level 4: 6º Ano ──
+[
+{q:"A fórmula da água é...",o:["CO₂","H₂O","O₂","NaCl"],a:1,e:"H₂O = 2 átomos de hidrogênio + 1 de oxigênio!"},
+{q:"O átomo é formado por...",o:["Moléculas e íons","Prótons, nêutrons e elétrons","Células e tecidos","Quarks somente"],a:1,e:"Núcleo (prótons + nêutrons) + elétrons ao redor!"},
+{q:"O que é energia cinética?",o:["Energia armazenada","Energia do movimento","Energia elétrica","Energia química"],a:1,e:"Cinética vem do grego 'kinesis' = movimento!"},
+{q:"Metais conduzem...",o:["Somente água","Somente luz","Calor e eletricidade","Somente som"],a:2,e:"Metais são bons condutores de calor e eletricidade!"},
+{q:"O que é pH?",o:["Pressão atmosférica","Medida de acidez ou basicidade","Fórmula química","Tipo de reação"],a:1,e:"pH < 7 = ácido, pH 7 = neutro, pH > 7 = básico!"},
+{q:"Qual é a velocidade aproximada da luz?",o:["30.000 km/s","300.000 km/s","3.000 km/s","3.000.000 km/s"],a:1,e:"Luz percorre ~300.000 km por segundo — o mais rápido do universo!"},
+{q:"O que é uma mistura heterogênea?",o:["Mistura onde não se distinguem os componentes","Mistura em que se vê os componentes separados","Substância pura","Composto químico"],a:1,e:"Ex: areia + água — você vê os dois separados!"},
+{q:"Gravidade na superfície da Terra ≈ ?",o:["1 m/s²","5 m/s²","9,8 m/s²","20 m/s²"],a:2,e:"g ≈ 9,8 m/s² — a aceleração com que objetos caem!"},
+{q:"O que é densidade?",o:["Peso de um objeto","Massa ÷ Volume","Tamanho de um objeto","Volume ÷ Massa"],a:1,e:"Densidade = massa/volume. É por isso que o ferro afunda e madeira flutua!"},
+{q:"O que são ondas sonoras?",o:["Ondas de luz","Vibrações que se propagam em meio material","Ondas eletromagnéticas","Ondas de calor"],a:1,e:"Som é vibração mecânica — precisa de meio (ar, água, sólido) para se propagar!"},
+]
+],
+
+bio:[
+// ── Level 0: 2º Ano ──
+[
+{q:"Qual destes é um ser vivo?",o:["Pedra","Nuvem","Árvore","Rio"],a:2,e:"Árvore nasce, cresce, se reproduz e morre — é um ser vivo!"},
+{q:"Que parte da planta absorve água do solo?",o:["Folha","Flor","Caule","Raiz"],a:3,e:"A raiz ancora a planta e absorve água e nutrientes do solo!"},
+{q:"Qual animal vive tanto na água quanto na terra?",o:["Peixe","Sapo","Baleia","Crocodilo"],a:1,e:"Sapo é anfíbio — vive na água (girino) e em terra (adulto)!"},
+{q:"As abelhas ajudam as flores com...",o:["Rega","Adubação","Polinização","Crescimento"],a:2,e:"Abelhas carregam pólen de flor em flor — polinização!"},
+{q:"Por que as folhas são verdes?",o:["Absorvem água azul","Têm clorofila","São pintadas","Refletem o sol"],a:1,e:"A clorofila é o pigmento verde das plantas!"},
+{q:"O caule da planta serve para...",o:["Absorver luz","Produzir frutos","Conduzir seiva e sustentar","Fazer fotossíntese"],a:2,e:"O caule conduz água e nutrientes entre raiz e folhas!"},
+{q:"Qual destes NÃO é ser vivo?",o:["Bactéria","Fungo","Pedra","Vírus"],a:2,e:"Pedra não nasce, cresce nem se reproduz — não é ser vivo!"},
+{q:"Animais que nascem de ovos são chamados de...",o:["Vivíparos","Ovíparos","Mamíferos","Placentários"],a:1,e:"Ovíparos = nascem de ovos. Ex: pássaros, cobras, peixes!"},
+{q:"Para que serve a flor de uma planta?",o:["Fazer fotossíntese","Absorver água","Reprodução","Armazenar nutrientes"],a:2,e:"A flor é o órgão reprodutivo — produz frutos e sementes!"},
+{q:"Qual parte da planta produz o alimento?",o:["Raiz","Caule","Folha","Flor"],a:2,e:"A folha faz fotossíntese com luz, água e CO₂!"},
+],
+// ── Level 1: 3º Ano ──
+[
+{q:"Mamíferos se diferenciam dos outros por...",o:["Ter escamas","Amamentar os filhotes","Pôr ovos","Viver no mar"],a:1,e:"Mamíferos têm pelo/cabelo, sangue quente e amamentam!"},
+{q:"Aves se caracterizam por ter...",o:["Escamas e barbatanas","Bico, penas e asas","4 patas e pelo","Guelras"],a:1,e:"Toda ave tem bico, penas e asas (nem todas voam)!"},
+{q:"Répteis têm a pele...",o:["Úmida e lisa","Com pelo","Seca e com escamas","Com penas"],a:2,e:"Répteis (cobras, lagartos, jacarés) têm escamas secas!"},
+{q:"Anfíbios passam por qual processo em sua vida?",o:["Hibernação","Migração","Metamorfose","Hibernação"],a:2,e:"Metamorfose: girino (água) → sapo adulto (terra/água)!"},
+{q:"Insetos têm quantas patas?",o:["4","6","8","12"],a:1,e:"Todos os insetos têm 6 patas — isso os define!"},
+{q:"Aranhas são insetos?",o:["Sim, são insetos voadores","Não, são aracnídeos (8 patas)","Sim, têm 6 patas","Não, são crustáceos"],a:1,e:"Aranha tem 8 patas — é aracnídeo, não inseto!"},
+{q:"Fungos se alimentam de...",o:["Luz solar","Fotossíntese","Matéria orgânica em decomposição","Pedras e minerais"],a:2,e:"Fungos são decompositores — absorvem nutrientes de matéria morta!"},
+{q:"O que são bactérias?",o:["Fungos pequenos","Seres unicelulares microscópicos","Vírus maiores","Células humanas"],a:1,e:"Bactérias são seres vivos unicelulares procariontes!"},
+{q:"Peixes respiram por...",o:["Pulmões","Pele","Guelras","Boca"],a:2,e:"Guelras filtram o O₂ dissolvido na água!"},
+{q:"Qual grupo de plantas produz frutos?",o:["Briófitas","Pteridófitas","Gimnospermas","Angiospermas"],a:3,e:"Angiospermas têm flor e fruto — é o grupo mais diverso!"},
+],
+// ── Level 2: 4º Ano ──
+[
+{q:"O sistema nervoso central é formado por...",o:["Coração e pulmões","Cérebro e medula espinhal","Ossos e músculos","Rins e fígado"],a:1,e:"Cérebro (comanda tudo) + medula espinhal (conecta ao corpo)!"},
+{q:"Quantas câmaras tem o coração humano?",o:["2","3","4","6"],a:2,e:"4 câmaras: 2 átrios + 2 ventrículos!"},
+{q:"Qual órgão produz a bile?",o:["Estômago","Pâncreas","Fígado","Vesícula"],a:2,e:"O fígado produz a bile (armazenada na vesícula biliar)!"},
+{q:"O que é o DNA?",o:["Proteína muscular","Molécula com informações genéticas","Vitamina essencial","Tipo de gordura"],a:1,e:"DNA = ácido desoxirribonucleico. Contém as 'instruções' do ser vivo!"},
+{q:"Qual hormônio regula o açúcar no sangue?",o:["Adrenalina","Testosterona","Insulina","Cortisol"],a:2,e:"Insulina (produzida pelo pâncreas) controla a glicose!"},
+{q:"O que são enzimas?",o:["Vitaminas","Minerais","Proteínas que aceleram reações químicas","Gorduras"],a:2,e:"Enzimas catalisam reações — sem elas a digestão demoraria anos!"},
+{q:"O sistema imunológico defende contra...",o:["Gravidade","Doenças, bactérias e vírus","Fome e sede","Barulho"],a:1,e:"O sistema imune nos protege de invasores com glóbulos brancos e anticorpos!"},
+{q:"Qual é o principal órgão da visão?",o:["Nervo óptico","Córnea","Cristalino","Olho (retina)"],a:3,e:"A retina capta luz e converte em sinais elétricos para o cérebro!"},
+{q:"Ossos são parte do sistema...",o:["Digestivo","Esquelético","Nervoso","Muscular"],a:1,e:"Sistema esquelético: ossos + cartilagens = estrutura do corpo!"},
+{q:"Quantos ossos tem o corpo humano adulto?",o:["186","196","206","216"],a:2,e:"206 ossos! Bebês nascem com ~270, vários se fundem ao crescer."},
+],
+// ── Level 3: 5º Ano ──
+[
+{q:"O que é uma teia alimentar?",o:["Uma cadeia alimentar linear","Conjunto de cadeias alimentares interligadas","Rede de decompositores","Ciclo do carbono"],a:1,e:"Teia = várias cadeias alimentares conectadas!"},
+{q:"O que é simbiose?",o:["Predação","Parasitismo","Relação mutuamente benéfica","Competição"],a:2,e:"Simbiose: os dois se beneficiam. Ex: flores e polinizadores!"},
+{q:"O que é um gene?",o:["Tipo de proteína","Órgão do corpo","Segmento de DNA que determina uma característica","Célula especial"],a:2,e:"Genes são 'instruções' no DNA que definem nossas características!"},
+{q:"O que é extinção?",o:["Espécie migrando","Espécie hibernando","Desaparecimento total de uma espécie","Espécie evoluindo"],a:2,e:"Extinção = zero indivíduos de uma espécie no mundo!"},
+{q:"Qual é o papel dos decompositores na natureza?",o:["Caçar predadores","Transformar matéria orgânica morta em nutrientes","Produzir oxigênio","Controlar a chuva"],a:1,e:"Fungos e bactérias reciclam nutrientes — essenciais para a vida!"},
+{q:"O que é habitat?",o:["Dieta do animal","Ambiente natural onde um ser vivo vive","Comportamento migratório","Tipo de reprodução"],a:1,e:"Habitat = lar do ser vivo. Ex: floresta tropical é habitat do tucano!"},
+{q:"A teoria da evolução por seleção natural foi de...",o:["Gregor Mendel","Isaac Newton","Charles Darwin","Albert Einstein"],a:2,e:"Darwin: os mais adaptados sobrevivem e se reproduzem!"},
+{q:"O que é mutação?",o:["Espécie nova","Mudança no DNA","Tipo de doença","Evolução rápida"],a:1,e:"Mutação = alteração no DNA. Pode ser benéfica, neutra ou prejudicial!"},
+{q:"Qual é a diferença entre herbívoro e carnívoro?",o:["Tamanho do animal","Local onde vivem","Herbívoro come plantas; carnívoro come animais","Herbívoro é selvagem; carnívoro é doméstico"],a:2,e:"Herbívoro = come plantas. Carnívoro = come outros animais!"},
+{q:"O que é fototropismo?",o:["Medo da luz","Movimento da planta em direção à luz","Reprodução pela luz","Fotossíntese de noche"],a:1,e:"Fototropismo: plantas crescem em direção à luz para otimizar fotossíntese!"},
+],
+// ── Level 4: 6º Ano ──
+[
+{q:"O que é meiose?",o:["Divisão que cria células iguais","Divisão celular que forma gametas (metade dos cromossomos)","Tipo de mitose","Divisão de bactérias"],a:1,e:"Meiose produz óvulos e espermatozoides com metade dos cromossomos!"},
+{q:"Quantos cromossomos tem uma célula humana normal?",o:["23","44","46","48"],a:2,e:"46 cromossomos em 23 pares!"},
+{q:"Quem descreveu a estrutura do DNA?",o:["Darwin e Mendel","Watson e Crick","Pasteur e Koch","Hooke e Leeuwenhoek"],a:1,e:"Watson e Crick (com dados de Rosalind Franklin) em 1953!"},
+{q:"Se D (dominante) e d (recessivo), o genótipo Dd expressa...",o:["A característica recessiva","A característica dominante","As duas juntas","Nenhuma"],a:1,e:"Um alelo dominante é suficiente para expressar a característica!"},
+{q:"O que é respiração celular?",o:["O ato de respirar com os pulmões","Processo de gerar ATP nas mitocôndrias","Fotossíntese inversa","Absorção de O₂ pelo sangue"],a:1,e:"Mitocôndrias: glicose + O₂ → CO₂ + H₂O + energia (ATP)!"},
+{q:"O que é bioma?",o:["Um tipo de célula","Grande região com clima, flora e fauna específicos","Tipo de ecossistema aquático","Conjunto de órgãos"],a:1,e:"Bioma: Amazônia, Cerrado, Caatinga, Mata Atlântica... cada um único!"},
+{q:"O que é anatomia?",o:["Estudo do comportamento animal","Estudo da estrutura dos seres vivos","Estudo das doenças","Estudo do DNA"],a:1,e:"Anatomia descreve as partes e estruturas dos seres vivos!"},
+{q:"Clonagem é...",o:["Tipo de mutação","Reprodução sexuada avançada","Cópia geneticamente idêntica de um organismo","Alteração do DNA"],a:2,e:"Clone = cópia genética. A ovelha Dolly foi o 1º mamífero clonado!"},
+{q:"O que é endemia?",o:["Doença que afeta o mundo todo","Doença exclusiva de uma região específica","Epidemia controlada","Infecção hospitalar"],a:1,e:"Endemia: doença que ocorre regularmente em determinada região!"},
+{q:"Qual é a diferença entre mitose e meiose?",o:["Mitose divide plantas; meiose divide animais","Mitose gera 2 células idênticas; meiose gera 4 com metade dos cromossomos","São iguais","Mitose é sexual; meiose é assexual"],a:1,e:"Mitose: crescimento e reparo. Meiose: reprodução sexuada!"},
+]
+],
+
+log:[
+// ── Level 0: 2º Ano ──
+[
+{q:"Qual número vem depois na sequência? 2, 4, 6, 8, __",o:["9","10","11","12"],a:1,e:"Soma 2 a cada vez: 2,4,6,8,10!"},
+{q:"Qual NÃO pertence ao grupo? Cão, Gato, Peixe, Pedra",o:["Cão","Gato","Peixe","Pedra"],a:3,e:"Pedra não é animal — não pertence ao grupo de seres vivos!"},
+{q:"Se hoje é segunda-feira, amanhã é...",o:["Domingo","Terça-feira","Sábado","Quarta-feira"],a:1,e:"Segunda → Terça → Quarta..."},
+{q:"Grande está para Pequeno assim como Alto está para...",o:["Gordo","Largo","Baixo","Comprido"],a:2,e:"São opostos! Grande ↔ Pequeno, Alto ↔ Baixo."},
+{q:"Complete: 10, 20, 30, __, 50",o:["35","40","45","38"],a:1,e:"Soma 10 a cada vez: 40!"},
+{q:"Número par entre 6 e 10?",o:["7","8","9","11"],a:1,e:"8 é par (divisível por 2)! 7 e 9 são ímpares."},
+{q:"Maria é irmã de João. João é irmão de...",o:["Ninguém","Seus pais","Maria","Seus avós"],a:2,e:"Se Maria é irmã de João, João também é irmão de Maria!"},
+{q:"Qual forma tem 3 lados?",o:["Quadrado","Círculo","Triângulo","Retângulo"],a:2,e:"Triângulo = 3 lados + 3 ângulos!"},
+{q:"Complete: 1, 3, 5, 7, __, __",o:["8 e 9","9 e 10","9 e 11","8 e 11"],a:2,e:"Números ímpares: soma 2 a cada vez. 7+2=9, 9+2=11!"},
+{q:"Se eu tenho 3 caixas com 4 bolas cada, tenho no total...",o:["7","10","12","16"],a:2,e:"3 × 4 = 12 bolas!"},
+],
+// ── Level 1: 3º Ano ──
+[
+{q:"Pássaro : Voar :: Peixe : ___",o:["Correr","Nadar","Pular","Voar"],a:1,e:"Pássaro usa asas para voar; peixe usa nadadeiras para nadar!"},
+{q:"Ana é mais velha que Bia. Bia é mais velha que Carla. Quem é a mais nova?",o:["Ana","Bia","Carla","Todas têm a mesma idade"],a:2,e:"Ana > Bia > Carla. Carla é a mais nova!"},
+{q:"Luiz tem o dobro da idade de Marta. Marta tem 6 anos. Luiz tem...",o:["3","8","10","12"],a:3,e:"Dobro de 6 = 2 × 6 = 12!"},
+{q:"Dia está para Noite assim como Verão está para...",o:["Quente","Inverno","Primavera","Sol"],a:1,e:"Opostos: Dia ↔ Noite, Verão ↔ Inverno!"},
+{q:"3, 6, 12, 24, __ (dobrando cada vez)",o:["36","40","48","50"],a:2,e:"24 × 2 = 48!"},
+{q:"Se hoje é quarta e a prova é em 3 dias, qual dia é?",o:["Sexta","Sábado","Domingo","Quinta"],a:1,e:"Quarta + 1 = Quinta. +2 = Sexta. +3 = Sábado!"},
+{q:"Livro : Página :: Casa : ___",o:["Janela","Porta","Tijolo","Teto"],a:2,e:"Páginas formam o livro; tijolos formam a casa!"},
+{q:"Calor está para Forno assim como Frio está para...",o:["Freezer","Geladeira","Ventilador","Ar-condicionado"],a:1,e:"Forno produz calor; geladeira produz frio!"},
+{q:"100, 90, 80, __, 60",o:["65","70","75","55"],a:1,e:"Subtrai 10 cada vez: 80-10=70!"},
+{q:"Se A=1, B=2, C=3, qual o valor de E?",o:["4","5","6","7"],a:1,e:"A=1,B=2,C=3,D=4,E=5!"},
+],
+// ── Level 2: 4º Ano ──
+[
+{q:"Todos os gatos são animais. Mimi é um gato. Logo, Mimi é...",o:["Um animal de estimação","Um animal","Doméstico","Felino"],a:1,e:"Silogismo lógico! Se todo A é B, e X é A, então X é B."},
+{q:"Se 3 balas custam R$6, quanto custam 5 balas?",o:["R$8","R$10","R$12","R$15"],a:1,e:"Regra de três: 3→R$6, 1→R$2, 5→R$10!"},
+{q:"1, 4, 9, 16, __ (quadrados perfeitos)",o:["20","24","25","30"],a:2,e:"1²=1, 2²=4, 3²=9, 4²=16, 5²=25!"},
+{q:"1, 1, 2, 3, 5, 8, __ (Fibonacci)",o:["10","12","13","14"],a:2,e:"Cada número = soma dos dois anteriores. 5+8=13!"},
+{q:"Se nenhum A é B, e Carlos é B, então Carlos...",o:["É A","Não é A","Pode ser A","Talvez seja A"],a:1,e:"Se nenhum A é B, qualquer B não pode ser A!"},
+{q:"Paulo está entre Ana (3ª) e Bia (5ª) na fila. Paulo é o...",o:["2º","3º","4º","6º"],a:2,e:"Ana é 3ª, Bia é 5ª, Paulo está entre elas = 4º!"},
+{q:"Um relógio atrasa 5 min/hora. Após 3 horas, quanto atrasou?",o:["10 min","12 min","15 min","20 min"],a:2,e:"5 min × 3 horas = 15 minutos!"},
+{q:"Qual é o próximo? 2, 3, 5, 7, 11, 13, __",o:["14","15","16","17"],a:3,e:"São números primos! Depois de 13, o próximo primo é 17!"},
+{q:"Rei está para Rainha assim como Pai está para...",o:["Filho","Avô","Mãe","Tio"],a:2,e:"Rei ↔ Rainha são pares masculino/feminino. Pai ↔ Mãe também!"},
+{q:"Se 2x = 10, então x = ?",o:["4","5","6","8"],a:1,e:"x = 10 ÷ 2 = 5!"},
+],
+// ── Level 3: 5º Ano ──
+[
+{q:"Sou par, entre 40 e 50, meus dígitos somam 8. Quem sou?",o:["42","44","46","48"],a:1,e:"44: 4+4=8 ✓, é par ✓, está entre 40 e 50 ✓!"},
+{q:"3 pessoas fazem um trabalho em 6 dias. Uma pessoa faz em...",o:["9 dias","12 dias","18 dias","24 dias"],a:2,e:"3 × 6 = 18 dias para uma pessoa só!"},
+{q:"Em um grupo de 30, 60% são meninas. Quantos meninos há?",o:["10","12","14","18"],a:1,e:"60% meninas = 18. Meninos = 30 - 18 = 12!"},
+{q:"2³ + 3² = ?",o:["13","15","17","19"],a:2,e:"2³ = 8 e 3² = 9. 8 + 9 = 17!"},
+{q:"Num torneio com 4 times, cada um joga contra todos uma vez. Quantas partidas?",o:["4","6","8","12"],a:1,e:"C(4,2) = 4×3÷2 = 6 partidas!"},
+{q:"Pedro tem 3× figurinhas de Ana. Juntos têm 40. Quantas Ana tem?",o:["8","10","12","14"],a:1,e:"Ana=x, Pedro=3x. x+3x=40 → 4x=40 → x=10!"},
+{q:"Qual sequência segue a regra 'dobra e subtrai 1'? Começando em 1:",o:["1,2,3,4","1,1,3,5","1,2,3,5","1,1,2,3"],a:1,e:"1→1×2-1=1 → 1×2-1=1 → 1×2-1=1... ops: 1→2-1=1, 1→2-1=1..."},
+{q:"30% de 30% de 1000 é...",o:["30","60","90","120"],a:2,e:"30% de 1000 = 300. 30% de 300 = 90!"},
+{q:"Em uma classe de 20, metade gosta de matemática e ¼ gosta de português. Quantos gostam dos dois se não há sobreposição?",o:["5","10","15","25"],a:2,e:"10 + 5 = 15 alunos gostam de ao menos uma!"},
+{q:"5 + 5 × 5 − 5 ÷ 5 = ?",o:["25","29","49","5"],a:1,e:"Ordem: ÷ e × primeiro: 5×5=25, 5÷5=1. Então 5+25-1=29!"},
+],
+// ── Level 4: 6º Ano ──
+[
+{q:"Progressão aritmética: 3, 7, 11, 15, __",o:["17","18","19","20"],a:2,e:"Razão = 4. 15 + 4 = 19!"},
+{q:"Probabilidade de tirar cara em uma moeda?",o:["1/4","1/3","1/2","2/3"],a:2,e:"1 cara em 2 possibilidades = 1/2 = 50%!"},
+{q:"Negação de 'Todos os pássaros voam' é...",o:["Nenhum pássaro voa","Alguns pássaros não voam","Todos os pássaros não voam","Pássaros raramente voam"],a:1,e:"A negação de 'Todos' é 'Algum não'. Pinguins existem!"},
+{q:"Num estacionamento, 1/3 são vermelhos e 1/4 são azuis. A fração restante é...",o:["1/2","7/12","5/12","1/4"],a:2,e:"1/3 + 1/4 = 4/12 + 3/12 = 7/12. Restante = 5/12!"},
+{q:"Se x² = 144, x = ?",o:["10","11","12","13"],a:2,e:"12 × 12 = 144. √144 = 12!"},
+{q:"Média de 5 notas: 7, 8, 6, 9 e 5 = ?",o:["6,5","7","7,5","8"],a:1,e:"(7+8+6+9+5) ÷ 5 = 35 ÷ 5 = 7!"},
+{q:"p → q. p é verdadeiro. q é...",o:["Falso","Verdadeiro","Pode ser qualquer coisa","Indefinido"],a:1,e:"Modus ponens: se p→q e p, então q é necessariamente verdadeiro!"},
+{q:"15 pessoas gostam de matemática, 12 de história, 5 de ambos. Quantas gostam de ao menos uma?",o:["20","22","24","27"],a:1,e:"União = 15 + 12 - 5 = 22 (subtrai os que estão nos dois)!"},
+{q:"Qual é a lógica? 1, 8, 27, 64, __",o:["100","125","128","144"],a:1,e:"São cubos perfeitos: 1³=1, 2³=8, 3³=27, 4³=64, 5³=125!"},
+{q:"Num grupo de 5 pessoas, de quantas formas diferentes podemos escolher 2?",o:["8","10","12","15"],a:1,e:"C(5,2) = 5! ÷ (2! × 3!) = 10 combinações!"},
+]
+]
+};
+
+// ════════════════════════════════════════════
+// STATE
+// ════════════════════════════════════════════
+const state = {
+  prog: {
+    math: {lvl: 0, stars: [0,0,0,0,0]},
+    sci:  {lvl: 0, stars: [0,0,0,0,0]},
+    bio:  {lvl: 0, stars: [0,0,0,0,0]},
+    log:  {lvl: 0, stars: [0,0,0,0,0]},
+  },
+  currentSubject: null,
+  currentLevel: null,
+  questions: [],
+  qIndex: 0,
+  correct: 0,
+  wrong: 0,
+  answered: false,
+  streak: 0,
+  lastDate: null,
+  lang: localStorage.getItem('estudos_da_tete_lang') || 'pt',
+};
+
+const PASS_THRESHOLD = 6; // out of 8
+const QS_PER_QUIZ = 8;
+const STORAGE_KEY = 'estudos_da_tete_v11';
+
+// ════════════════════════════════════════════
+// HELPERS
+// ════════════════════════════════════════════
+function shuffle(arr) {
+  const a = [...arr];
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+  return a;
+}
+function pick(arr, n) { return shuffle(arr).slice(0, n); }
+function $ (id) { return document.getElementById(id); }
+function show(id) { $(id).classList.add('active'); }
+function hide(id) { $(id).classList.remove('active'); }
+function setScreen(id) {
+  ['home','subj-screen','quiz-screen','result-screen'].forEach(s => hide(s));
+  show(id);
+  window.scrollTo(0,0);
+}
+
+function setLang(newLang){
+  state.lang = newLang === 'en' ? 'en' : 'pt';
+  try { localStorage.setItem('estudos_da_tete_lang', state.lang); } catch(e) {}
+  applyLanguage();
+}
+function applyLanguage(){
+  const l = lang();
+  document.documentElement.lang = l === 'en' ? 'en' : 'pt-BR';
+  if($('lang-pt')) $('lang-pt').className = 'lang-btn' + (l === 'pt' ? ' active' : '');
+  if($('lang-en')) $('lang-en').className = 'lang-btn' + (l === 'en' ? ' active' : '');
+  if($('hero-sub')) $('hero-sub').textContent = text('heroSub');
+  if($('streak-label')) $('streak-label').textContent = text('streak');
+  if($('streak-days')) $('streak-days').textContent = text('days');
+  if($('bilingual-note')) $('bilingual-note').textContent = text('note');
+  if($('home-footer')) $('home-footer').textContent = text('footer');
+  ['math','sci','bio','log'].forEach(function(s){ if($('name-'+s)) $('name-'+s).textContent = subjectName(s); });
+  if($('level-up-title')) $('level-up-title').textContent = text('unlockedTitle');
+  if($('home-btn')) $('home-btn').textContent = text('home');
+  renderHome();
+  if(document.getElementById('subj-screen').classList.contains('active') && state.currentSubject) openSubject(state.currentSubject);
+}
+
+function loadProgress() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if(!saved) return;
+    const data = JSON.parse(saved);
+    if(data && data.prog) state.prog = data.prog;
+    if(data && typeof data.streak === 'number') state.streak = data.streak;
+    if(data && data.lastDate) state.lastDate = data.lastDate;
+    if(data && data.lang) state.lang = data.lang;
+  } catch(e) {
+    console.warn('Não foi possível carregar o progresso salvo:', e);
+  }
+}
+function saveProgress() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      prog: state.prog,
+      streak: state.streak,
+      lastDate: state.lastDate,
+      lang: state.lang
+    }));
+  } catch(e) {
+    console.warn('Não foi possível salvar o progresso:', e);
+  }
+}
+
+// ════════════════════════════════════════════
+// HOME
+// ════════════════════════════════════════════
+function renderHome() {
+  const subs = ['math','sci','bio','log'];
+  subs.forEach(s => {
+    const lvl = state.prog[s].lvl;
+    const stars = state.prog[s].stars;
+    $(`grade-${s}`).textContent = gradeName(lvl);
+    const dotsEl = $(`dots-${s}`);
+    dotsEl.innerHTML = '';
+    for(let i=0;i<5;i++){
+      const d = document.createElement('div');
+      d.className = 'level-dot';
+      if(i < lvl) d.classList.add('done');
+      else if(i === lvl) d.classList.add('active');
+      dotsEl.appendChild(d);
+    }
+  });
+  $('streak-count').textContent = state.streak;
+  updateStreak();
+}
+
+function updateStreak() {
+  const today = new Date().toDateString();
+  if(!state.lastDate) { state.lastDate = today; return; }
+  if(state.lastDate !== today) { state.streak = 0; state.lastDate = today; }
+}
+
+// ════════════════════════════════════════════
+// SUBJECT SCREEN
+// ════════════════════════════════════════════
+function openSubject(subj) {
+  state.currentSubject = subj;
+  const colors = {math:'var(--math)',sci:'var(--sci)',bio:'var(--bio)',log:'var(--log)'};
+  $('subj-hdr').style.background = `linear-gradient(135deg,${colors[subj]},${colors[subj]}CC)`;
+  $('subj-title-text').textContent = subjectName(subj);
+  $('subj-sub-text').textContent = `${gradeName(state.prog[subj].lvl)} ${text('current')} • ${text('totalLevels')}`;
+  $('subj-icon-big').textContent = ICONS[subj];
+
+  const path = $('level-path');
+  path.innerHTML = '';
+  const cls = subj;
+  for(let i=0;i<5;i++){
+    const prog = state.prog[subj];
+    const isUnlocked = i <= prog.lvl;
+    const isCompleted = i < prog.lvl;
+    const isCurrent = i === prog.lvl;
+    const starsEarned = prog.stars[i];
+
+    const node = document.createElement('div');
+    node.className = `level-node ${isUnlocked ? '' : 'locked'} ${isCurrent ? 'current border-${cls}' : ''}`;
+    if(isCurrent) node.classList.add(`border-${cls}`);
+
+    const badge = document.createElement('div');
+    badge.className = `node-badge c-${cls}`;
+    badge.textContent = i+1;
+    badge.style.opacity = isUnlocked ? '1' : '.4';
+
+    const info = document.createElement('div');
+    info.className = 'node-info';
+
+    const title = document.createElement('div');
+    title.className = 'node-title';
+    title.textContent = gradeName(i);
+
+    const topic = document.createElement('div');
+    topic.className = 'node-topic';
+    topic.textContent = topicName(subj,i);
+
+    const starsDiv = document.createElement('div');
+    starsDiv.className = 'node-stars';
+    for(let s=0;s<3;s++){
+      const st = document.createElement('span');
+      st.className = 'node-star' + (s < starsEarned ? ' earned' : '');
+      st.textContent = '⭐';
+      starsDiv.appendChild(st);
+    }
+
+    info.appendChild(title);
+    info.appendChild(topic);
+    if(isUnlocked) info.appendChild(starsDiv);
+
+    node.appendChild(badge);
+    node.appendChild(info);
+
+    if(!isUnlocked) {
+      const lock = document.createElement('span');
+      lock.className = 'node-lock';
+      lock.textContent = '🔒';
+      node.appendChild(lock);
+    } else {
+      const btn = document.createElement('button');
+      btn.className = 'node-play-btn' + (isCompleted ? ' completed' : '');
+      btn.textContent = isCompleted ? text('replay') : text('play');
+      btn.onclick = (e) => { e.stopPropagation(); startQuiz(subj, i); };
+      node.appendChild(btn);
+    }
+
+    if(isUnlocked) node.onclick = () => startQuiz(subj, i);
+    path.appendChild(node);
+  }
+
+  setScreen('subj-screen');
+}
+
+function goHome() { renderHome(); setScreen('home'); }
+
+// ════════════════════════════════════════════
+// QUIZ
+// ════════════════════════════════════════════
+function startQuiz(subj, level) {
+  state.currentSubject = subj;
+  state.currentLevel = level;
+  state.questions = pick(QUESTIONS[subj][level], QS_PER_QUIZ);
+  state.qIndex = 0;
+  state.correct = 0;
+  state.wrong = 0;
+  state.answered = false;
+
+  const cls = subj;
+  $('q-icon').textContent = ICONS[subj];
+  $('q-subj-name').textContent = subjectName(subj);
+  $('q-lvl-name').textContent = `${gradeName(level)} — ${topicName(subj,level)}`;
+
+  const fill = $('prog-fill');
+  fill.className = `progress-fill progress-${cls}`;
+  $('q-total').textContent = QS_PER_QUIZ;
+
+  setScreen('quiz-screen');
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = state.questions[state.qIndex];
+  state.answered = false;
+
+  $('q-num').textContent = state.qIndex + 1;
+  $('correct-count').textContent = state.correct;
+  $('wrong-count').textContent = state.wrong;
+
+  const pct = (state.qIndex / QS_PER_QUIZ) * 100;
+  $('prog-fill').style.width = pct + '%';
+
+  $('question-text').textContent = q.q;
+
+  const grid = $('options-grid');
+  grid.innerHTML = '';
+  const letters = ['A','B','C','D'];
+  q.o.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.innerHTML = `<span class="option-letter">${letters[i]}</span>${opt}`;
+    btn.onclick = () => selectAnswer(i);
+    grid.appendChild(btn);
+  });
+
+  $('feedback-box').className = 'feedback-box';
+  $('next-btn').className = 'next-btn';
+}
+
+function selectAnswer(idx) {
+  if(state.answered) return;
+  state.answered = true;
+
+  const q = state.questions[state.qIndex];
+  const isCorrect = idx === q.a;
+  const btns = document.querySelectorAll('.option-btn');
+
+  btns.forEach((btn, i) => {
+    btn.classList.add('disabled');
+    if(i === q.a) btn.classList.add('correct');
+    else if(i === idx && !isCorrect) btn.classList.add('wrong');
+  });
+
+  const fb = $('feedback-box');
+  fb.className = 'feedback-box visible' + (isCorrect ? '' : ' wrong-fb');
+  $('fb-emoji').textContent = isCorrect ? '🎉' : '💡';
+  $('fb-text').textContent = (isCorrect ? text('correct') : text('almost')) + q.e;
+
+  if(isCorrect) state.correct++;
+  else state.wrong++;
+
+  $('correct-count').textContent = state.correct;
+  $('wrong-count').textContent = state.wrong;
+  $('next-btn').className = 'next-btn visible';
+  $('next-btn').textContent = state.qIndex + 1 < QS_PER_QUIZ ? text('next') : text('result');
+}
+
+function nextQuestion() {
+  state.qIndex++;
+  if(state.qIndex >= QS_PER_QUIZ) {
+    showResult();
+  } else {
+    renderQuestion();
+  }
+}
+
+// ════════════════════════════════════════════
+// RESULT
+// ════════════════════════════════════════════
+function showResult() {
+  const score = state.correct;
+  const total = QS_PER_QUIZ;
+  const passed = score >= PASS_THRESHOLD;
+  const subj = state.currentSubject;
+  const level = state.currentLevel;
+  const prog = state.prog[subj];
+
+  // Calculate stars
+  let stars = 0;
+  if(score >= total) stars = 3;
+  else if(score >= 7) stars = 3;
+  else if(score >= PASS_THRESHOLD) stars = 2;
+  else if(score >= 4) stars = 1;
+
+  // Level up if passed and not already beyond
+  let levelUp = false;
+  if(passed && level === prog.lvl && prog.lvl < 4) {
+    prog.lvl++;
+    levelUp = true;
+  }
+
+  // Update stars
+  prog.stars[level] = Math.max(prog.stars[level], stars);
+
+  // Update streak
+  const today = new Date().toDateString();
+  if(state.lastDate !== today) {
+    state.streak++;
+    state.lastDate = today;
+    $('streak-count').textContent = state.streak;
+  }
+
+  saveProgress();
+
+  // Render result screen
+  const colors = {math:'var(--math)',sci:'var(--sci)',bio:'var(--bio)',log:'var(--log)'};
+  const scoreCircle = $('score-circle');
+  scoreCircle.style.background = `linear-gradient(135deg,${colors[subj]},${colors[subj]}AA)`;
+
+  $('score-num').textContent = score;
+  $('score-denom').textContent = `${text('of')} ${total}`;
+
+  // Stars
+  for(let i=1;i<=3;i++){
+    const el = $(`star${i}`);
+    el.className = 'big-star' + (i <= stars ? ' earned' : '');
+  }
+
+  // Emoji and title
+  if(score === total) {
+    $('result-emoji').textContent = '🏆';
+    $('result-title').textContent = text('perfect');
+  } else if(passed) {
+    $('result-emoji').textContent = '🎉';
+    $('result-title').textContent = text('amazing');
+  } else {
+    $('result-emoji').textContent = '💪';
+    $('result-title').textContent = text('almostThere');
+  }
+
+  $('result-sub').textContent = `${score} ${text('of')} ${total} ${text('rightAnswers')} — ${gradeName(level)} — ${subjectName(subj)}`;
+
+  // Level up banner
+  const banner = $('level-up-banner');
+  if(levelUp) {
+    banner.className = 'level-up-banner visible';
+    $('level-up-text').textContent = `${text('unlocked')} ${gradeName(prog.lvl)} — ${subjectName(subj)}! ${text('keepGoing')}`;
+  } else {
+    banner.className = 'level-up-banner';
+  }
+
+  // Message
+  let msg = '';
+  if(score === total) msg = text('msgPerfect').replace('{subj}', subjectName(subj));
+  else if(score >= 7) msg = text('msgExcellent').replace('{score}', score);
+  else if(passed) msg = text('msgPassed').replace('{score}', score);
+  else if(score >= 4) msg = text('msgReview').replace('{score}', score).replace('{pass}', PASS_THRESHOLD);
+  else msg = text('msgTry').replace('{score}', score);
+  $('result-msg').textContent = msg;
+
+  // Action button
+  const actionBtn = $('result-action-btn');
+  if(passed && levelUp) {
+    actionBtn.textContent = `${text('tryLevel')} ${gradeName(prog.lvl)}!`;
+  } else if(passed) {
+    actionBtn.textContent = text('playAgain');
+  } else {
+    actionBtn.textContent = text('tryAgain');
+  }
+
+  setScreen('result-screen');
+
+  if(passed && stars >= 2) launchConfetti();
+}
+
+function resultAction() {
+  const subj = state.currentSubject;
+  const prog = state.prog[subj];
+  const passed = state.correct >= PASS_THRESHOLD;
+
+  if(passed && prog.lvl > state.currentLevel) {
+    startQuiz(subj, prog.lvl);
+  } else {
+    startQuiz(subj, state.currentLevel);
+  }
+}
+
+// ════════════════════════════════════════════
+// CONFETTI
+// ════════════════════════════════════════════
+function launchConfetti() {
+  const container = $('confetti-container');
+  container.innerHTML = '';
+  const colors = ['#FF6B35','#FFD166','#06B6D4','#10B981','#8B5CF6','#EC4899','#F59E0B'];
+  for(let i=0;i<60;i++){
+    const piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    piece.style.cssText = `
+      left: ${Math.random()*100}%;
+      background: ${colors[Math.floor(Math.random()*colors.length)]};
+      width: ${6+Math.random()*8}px;
+      height: ${6+Math.random()*8}px;
+      border-radius: ${Math.random()>.5?'50%':'2px'};
+      animation-duration: ${1.5+Math.random()*2}s;
+      animation-delay: ${Math.random()*0.8}s;
+    `;
+    container.appendChild(piece);
+  }
+  setTimeout(() => { container.innerHTML = ''; }, 4000);
+}
+
+// ════════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════════
+loadProgress();
+applyLanguage();
+renderHome();
+setScreen('home');
+
+// PWA — GitHub Pages / offline after first load
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function(){
+    navigator.serviceWorker.register('./service-worker.js').catch(function(err){
+      console.warn('Service Worker não registrado:', err);
+    });
+  });
+}
+
+</script>
+</body>
+</html>
