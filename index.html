@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Estudos da Tété 🌟 | Tété Studies V1.1</title>
+<title>Estudos da Tété 🌟 | Tété Studies V1.2</title>
 <meta name="description" content="Estudos da Tété: app educativo PWA bilíngue PT/EN para estudos infantis com níveis, estrelas e progresso offline.">
 <meta name="theme-color" content="#FF6B35">
 <link rel="manifest" href="manifest.json">
@@ -14,6 +14,7 @@
   --sci:#06B6D4;  --sci-l:#E0F7FA;  --sci-d:#0891B2;
   --bio:#10B981;  --bio-l:#E8F5E9;  --bio-d:#059669;
   --log:#8B5CF6;  --log-l:#EDE9FF;  --log-d:#7C3AED;
+  --eng:#EC4899;  --eng-l:#FCE7F3;  --eng-d:#BE185D;
   --dark:#1E1B18; --muted:#6B7280; --bg:#FFF8F0;
   --gold:#F59E0B; --star:#FCD34D; --white:#fff;
   --r:20px; --shadow:0 6px 24px rgba(0,0,0,.10);
@@ -64,6 +65,7 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);min-height:100vh;overf
 .subject-card.sci::before{background:var(--sci)}
 .subject-card.bio::before{background:var(--bio)}
 .subject-card.log::before{background:var(--log)}
+.subject-card.eng::before{background:var(--eng)}
 .subject-card:active{transform:scale(.96)}
 .subject-icon{font-size:32px;display:block;margin-bottom:8px}
 .subject-name{font-weight:900;font-size:15px;color:var(--dark);margin-bottom:4px}
@@ -222,12 +224,15 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);min-height:100vh;overf
 /* ── GRADE COLORS ──────────────────────────── */
 .c-math{background:var(--math)}.c-sci{background:var(--sci)}
 .c-bio{background:var(--bio)}.c-log{background:var(--log)}
+.c-eng{background:var(--eng)}
 .t-math{color:var(--math)}.t-sci{color:var(--sci)}
 .t-bio{color:var(--bio)}.t-log{color:var(--log)}
 .border-math{border-color:var(--math)}.border-sci{border-color:var(--sci)}
 .border-bio{border-color:var(--bio)}.border-log{border-color:var(--log)}
+.border-eng{border-color:var(--eng)}
 .progress-math{background:var(--math)}.progress-sci{background:var(--sci)}
 .progress-bio{background:var(--bio)}.progress-log{background:var(--log)}
+.progress-eng{background:var(--eng)}
 
 
 /* ── LANGUAGE / BILINGUAL UI ───────────────── */
@@ -246,6 +251,26 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);min-height:100vh;overf
   margin:0 16px 14px;background:#fff;border-radius:16px;padding:12px 14px;
   box-shadow:0 2px 12px rgba(0,0,0,.06);font-size:12px;color:var(--muted);font-weight:700;line-height:1.45;
 }
+.audio-btn{
+  margin-top:10px;background:#111827;color:#fff;border:none;border-radius:999px;padding:9px 14px;
+  font-family:'Nunito',sans-serif;font-weight:900;font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;
+}
+.audio-btn:active{transform:scale(.97)}
+
+
+/* ── V1.2 DASHBOARD / REVIEW / NAV ───────── */
+.home-dashboard{margin:16px;padding:16px;background:linear-gradient(135deg,#fff,#fff7ed);border-radius:22px;box-shadow:var(--shadow);border:2px solid rgba(245,158,11,.18)}
+.dash-title{font-family:'Fredoka One',sans-serif;font-size:20px;color:var(--dark);margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.dash-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.dash-card{background:#fff;border-radius:16px;padding:12px;border:1px solid #F3E7D8;box-shadow:0 2px 10px rgba(0,0,0,.04)}
+.dash-value{font-weight:900;font-size:22px;color:var(--dark);line-height:1}
+.dash-label{font-size:11px;color:var(--muted);font-weight:800;margin-top:4px}
+.dash-wide{grid-column:1/-1}
+.mini-bars{display:flex;flex-direction:column;gap:7px;margin-top:8px}
+.mini-row{display:grid;grid-template-columns:82px 1fr 38px;gap:8px;align-items:center;font-size:11px;font-weight:900;color:var(--dark)}
+.mini-track{height:8px;background:#F3F4F6;border-radius:99px;overflow:hidden}.mini-fill{height:100%;border-radius:99px;background:var(--gold)}
+.nav-row{display:flex;gap:8px;padding:12px 16px 0}.nav-row .back-btn{background:#fff;color:var(--dark);box-shadow:0 2px 10px rgba(0,0,0,.08);border:1px solid #eee}.review-btn{margin-top:8px;background:#fff;color:var(--dark);border:2px solid #E5E7EB;border-radius:14px;padding:13px 14px;font-family:'Nunito',sans-serif;font-weight:900;font-size:14px;cursor:pointer;width:100%}
+#review-screen{background:var(--bg)}.review-header{padding:20px 16px;background:linear-gradient(135deg,#111827,#374151);color:#fff}.review-title{font-family:'Fredoka One',sans-serif;font-size:25px;margin-top:8px}.review-sub{font-size:13px;opacity:.88;font-weight:700;margin-top:4px}.review-list{padding:16px;display:flex;flex-direction:column;gap:12px}.review-card{background:#fff;border-radius:18px;padding:14px;box-shadow:var(--shadow);border-left:6px solid #10B981}.review-card.wrong{border-left-color:#EF4444}.review-q{font-weight:900;color:var(--dark);font-size:14px;line-height:1.4}.review-meta{font-size:12px;color:var(--muted);font-weight:800;margin-top:8px;line-height:1.45}.review-exp{font-size:13px;color:var(--dark);font-weight:700;margin-top:8px;line-height:1.45;background:#F9FAFB;border-radius:12px;padding:10px}.review-empty{background:#fff;border-radius:18px;margin:16px;padding:20px;box-shadow:var(--shadow);font-weight:800;color:var(--muted);text-align:center}.top-back-dark{background:rgba(255,255,255,.2);color:#fff;border:none}
 
 /* ── SCROLLBAR ─────────────────────────────── */
 ::-webkit-scrollbar{width:5px}
@@ -266,7 +291,17 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);min-height:100vh;overf
     <p class="hero-sub" id="hero-sub">Aprender brincando</p>
     <div class="hero-streak" id="streak-badge">🔥 <span id="streak-label">Sequência:</span> <span id="streak-count">0</span> <span id="streak-days">dias</span></div>
   </div>
-  <div class="bilingual-note" id="bilingual-note">🇧🇷 Português como padrão. 🇺🇸 Interface em inglês disponível; o banco completo de perguntas traduzidas fica planejado para a V1.2.</div>
+  <div class="bilingual-note" id="bilingual-note">🇧🇷 Português como padrão. 🇺🇸 Inglês Inicial com escrita, áudio e revisão de questões do 1º ao 6º ano.</div>
+  <div class="home-dashboard" id="home-dashboard">
+    <div class="dash-title"><span id="dash-title">📊 Meu Desempenho</span><span style="font-size:22px">🏅</span></div>
+    <div class="dash-grid">
+      <div class="dash-card"><div class="dash-value" id="dash-total">0</div><div class="dash-label" id="dash-total-label">Questões</div></div>
+      <div class="dash-card"><div class="dash-value" id="dash-acc">0%</div><div class="dash-label" id="dash-acc-label">Aproveitamento</div></div>
+      <div class="dash-card"><div class="dash-value" id="dash-ok">0</div><div class="dash-label" id="dash-ok-label">Acertos</div></div>
+      <div class="dash-card"><div class="dash-value" id="dash-bad">0</div><div class="dash-label" id="dash-bad-label">Erros</div></div>
+      <div class="dash-card dash-wide"><div class="dash-label" id="dash-subj-label">Desempenho por matéria</div><div class="mini-bars" id="dash-bars"></div></div>
+    </div>
+  </div>
   <div class="subjects-grid">
     <div class="subject-card math" onclick="openSubject('math')">
       <span class="subject-icon">🔢</span>
@@ -292,6 +327,12 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);min-height:100vh;overf
       <div class="subject-grade" id="grade-log">2º Ano</div>
       <div class="level-dots" id="dots-log"></div>
     </div>
+    <div class="subject-card eng" onclick="openSubject('eng')">
+      <span class="subject-icon">🇺🇸</span>
+      <div class="subject-name" id="name-eng">Inglês Inicial</div>
+      <div class="subject-grade" id="grade-eng">1º Ano</div>
+      <div class="level-dots" id="dots-eng"></div>
+    </div>
   </div>
   <div class="home-footer" id="home-footer">✨ Responda bem para subir de nível!</div>
 </div>
@@ -311,6 +352,7 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);min-height:100vh;overf
 
 <!-- ══════════ QUIZ ══════════ -->
 <div id="quiz-screen" class="screen">
+  <div class="nav-row"><button class="back-btn" onclick="openSubject(state.currentSubject)">←</button><button class="back-btn" onclick="goHome()">🏠</button></div>
   <div class="quiz-header">
     <div class="quiz-subj-tag">
       <span class="quiz-subj-icon" id="q-icon"></span>
@@ -361,6 +403,17 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);min-height:100vh;overf
   </div>
 </div>
 
+
+<!-- ══════════ REVIEW ══════════ -->
+<div id="review-screen" class="screen">
+  <div class="review-header">
+    <button class="back-btn top-back-dark" onclick="setScreen('result-screen')">←</button>
+    <div class="review-title" id="review-title">📚 Revisão</div>
+    <div class="review-sub" id="review-sub">Veja acertos, erros e explicações.</div>
+  </div>
+  <div class="review-list" id="review-list"></div>
+</div>
+
 <div class="confetti-container" id="confetti-container"></div>
 
 <script>
@@ -368,32 +421,35 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);min-height:100vh;overf
 // DATA — CURRICULUM
 // ════════════════════════════════════════════
 const GRADES = {
-  pt:['2º Ano','3º Ano','4º Ano','5º Ano','6º Ano'],
-  en:['2nd Grade','3rd Grade','4th Grade','5th Grade','6th Grade']
+  pt:{default:['2º Ano','3º Ano','4º Ano','5º Ano','6º Ano'], eng:['1º Ano','2º Ano','3º Ano','4º Ano','5º Ano','6º Ano']},
+  en:{default:['2nd Grade','3rd Grade','4th Grade','5th Grade','6th Grade'], eng:['1st Grade','2nd Grade','3rd Grade','4th Grade','5th Grade','6th Grade']}
 };
 const TOPICS = {
   pt:{
     math:['Números e Operações','Multiplicação e Frações','Área e Geometria','Decimais e Porcentagem','Álgebra e Proporcionalidade'],
     sci: ['Natureza e Seres Vivos','Ecossistemas e Matéria','Sistema Solar e Corpo Humano','Célula e Clima','Física e Química Básica'],
     bio: ['Seres Vivos','Classificação dos Animais','Corpo Humano','Ecologia e Genética','Genética Avançada'],
-    log: ['Sequências e Padrões','Analogias e Problemas','Raciocínio Lógico','Problemas Complexos','Lógica Avançada']
+    log: ['Sequências e Padrões','Analogias e Problemas','Raciocínio Lógico','Problemas Complexos','Lógica Avançada'],
+    eng: ['Alfabeto, sons e palavras','Cores, números e família','Frases simples e escola','Rotina, animais e perguntas','Leitura curta e escrita','Conversação inicial e produção textual']
   },
   en:{
     math:['Numbers and Operations','Multiplication and Fractions','Area and Geometry','Decimals and Percentages','Algebra and Proportionality'],
     sci: ['Nature and Living Things','Ecosystems and Matter','Solar System and Human Body','Cells and Climate','Basic Physics and Chemistry'],
     bio: ['Living Things','Animal Classification','Human Body','Ecology and Genetics','Advanced Genetics'],
-    log: ['Sequences and Patterns','Analogies and Problems','Logical Reasoning','Complex Problems','Advanced Logic']
+    log: ['Sequences and Patterns','Analogies and Problems','Logical Reasoning','Complex Problems','Advanced Logic'],
+    eng: ['Alphabet, sounds and words','Colors, numbers and family','Simple sentences and school','Routine, animals and questions','Short reading and writing','Basic conversation and writing']
   }
 };
-const ICONS = {math:'🔢',sci:'🔭',bio:'🌿',log:'🧩'};
+const ICONS = {math:'🔢',sci:'🔭',bio:'🌿',log:'🧩',eng:'🇺🇸'};
+const SUBJECTS = ['math','sci','bio','log','eng'];
 const NAMES = {
-  pt:{math:'Matemática',sci:'Ciências',bio:'Biologia',log:'Lógica'},
-  en:{math:'Math',sci:'Science',bio:'Biology',log:'Logic'}
+  pt:{math:'Matemática',sci:'Ciências',bio:'Biologia',log:'Lógica',eng:'Inglês Inicial'},
+  en:{math:'Math',sci:'Science',bio:'Biology',log:'Logic',eng:'Beginner English'}
 };
 const UI = {
   pt:{
     heroSub:'Aprender brincando', streak:'Sequência:', days:'dias',
-    note:'🇧🇷 Português como padrão. 🇺🇸 Interface em inglês disponível; o banco completo de perguntas traduzidas fica planejado para a V1.2.',
+    note:'🇧🇷 Português como padrão. 🇺🇸 Agora com módulo Inglês Inicial: escrita + áudio do 1º ao 6º ano.',
     footer:'✨ Responda bem para subir de nível!', current:'atual', totalLevels:'5 níveis no total',
     replay:'🔄 Refazer', play:'▶ Jogar', next:'Próxima →', result:'Ver Resultado ✓',
     correct:'Correto! ', almost:'Quase! ', of:'de', rightAnswers:'respostas certas',
@@ -404,11 +460,11 @@ const UI = {
     msgPassed:'✅ Parabéns! {score} acertos — você passou de fase! O próximo nível foi desbloqueado!',
     msgReview:'📚 Bom esforço! Você acertou {score}. Precisa de {pass} para avançar. Revise e tente de novo!',
     msgTry:'💡 Não desista! Você acertou {score}. Tente de novo — cada erro é uma lição! O cérebro aprende errando.',
-    tryLevel:'🚀 Tentar', playAgain:'🔄 Jogar Novamente', tryAgain:'💪 Tentar de Novo', home:'🏠 Início'
+    tryLevel:'🚀 Tentar', playAgain:'🔄 Jogar Novamente', tryAgain:'💪 Tentar de Novo', home:'🏠 Início', listen:'🔊 Ouvir', audioHelp:'Clique para ouvir a pronúncia em inglês.'
   },
   en:{
     heroSub:'Learn by playing', streak:'Streak:', days:'days',
-    note:'🇧🇷 Portuguese is the default. 🇺🇸 English interface is available; the fully translated question bank is planned for V1.2.',
+    note:'🇧🇷 Portuguese is the default. 🇺🇸 Now with Beginner English: writing + audio from 1st to 6th grade.',
     footer:'✨ Answer well to level up!', current:'current', totalLevels:'5 levels total',
     replay:'🔄 Replay', play:'▶ Play', next:'Next →', result:'See Result ✓',
     correct:'Correct! ', almost:'Almost! ', of:'of', rightAnswers:'right answers',
@@ -419,14 +475,81 @@ const UI = {
     msgPassed:'✅ Congratulations! {score} correct answers — you passed this level! The next level is unlocked!',
     msgReview:'📚 Good effort! You got {score}. You need {pass} to move forward. Review and try again!',
     msgTry:'💡 Do not give up! You got {score}. Try again — every mistake is a lesson! The brain learns by trying.',
-    tryLevel:'🚀 Try', playAgain:'🔄 Play Again', tryAgain:'💪 Try Again', home:'🏠 Home'
+    tryLevel:'🚀 Try', playAgain:'🔄 Play Again', tryAgain:'💪 Try Again', home:'🏠 Home', listen:'🔊 Listen', audioHelp:'Tap to hear the English pronunciation.'
   }
 };
 function lang(){ return state.lang || 'pt'; }
-function gradeName(i){ return GRADES[lang()][i]; }
+function gradeName(i, subj){
+  var pack = GRADES[lang()];
+  var list = (subj === 'eng') ? pack.eng : pack.default;
+  return list[i] || list[list.length-1];
+}
 function subjectName(s){ return NAMES[lang()][s]; }
-function topicName(s,i){ return TOPICS[lang()][s][i]; }
+function topicName(s,i){ return TOPICS[lang()][s][i] || TOPICS.pt[s][i] || ''; }
 function text(k){ return UI[lang()][k] || UI.pt[k] || k; }
+function levelCount(subj){ return QUESTIONS[subj] ? QUESTIONS[subj].length : 0; }
+function maxLevelIndex(subj){ return Math.max(0, levelCount(subj)-1); }
+function ensureProgress(){
+  SUBJECTS.forEach(function(s){
+    if(!state.prog[s]) state.prog[s] = {lvl:0, stars:[]};
+    var n = levelCount(s);
+    if(!Array.isArray(state.prog[s].stars)) state.prog[s].stars = [];
+    while(state.prog[s].stars.length < n) state.prog[s].stars.push(0);
+    if(state.prog[s].lvl > n-1) state.prog[s].lvl = n-1;
+    if(state.prog[s].lvl < 0) state.prog[s].lvl = 0;
+  });
+}
+
+function ensureStats(){
+  if(!state.stats) state.stats = {total:0, correct:0, wrong:0, bySubject:{}};
+  if(!state.stats.bySubject) state.stats.bySubject = {};
+  SUBJECTS.forEach(function(s){
+    if(!state.stats.bySubject[s]) state.stats.bySubject[s] = {total:0, correct:0, wrong:0};
+  });
+}
+function pct(c,t){ return t ? Math.round((c/t)*100) : 0; }
+function updateDashboard(){
+  ensureStats();
+  if(!$('dash-total')) return;
+  var st = state.stats;
+  $('dash-total').textContent = st.total || 0;
+  $('dash-ok').textContent = st.correct || 0;
+  $('dash-bad').textContent = st.wrong || 0;
+  $('dash-acc').textContent = pct(st.correct||0, st.total||0) + '%';
+  $('dash-title').textContent = lang()==='en' ? '📊 My Performance' : '📊 Meu Desempenho';
+  $('dash-total-label').textContent = lang()==='en' ? 'Questions' : 'Questões';
+  $('dash-acc-label').textContent = lang()==='en' ? 'Accuracy' : 'Aproveitamento';
+  $('dash-ok-label').textContent = lang()==='en' ? 'Correct' : 'Acertos';
+  $('dash-bad-label').textContent = lang()==='en' ? 'Mistakes' : 'Erros';
+  $('dash-subj-label').textContent = lang()==='en' ? 'Performance by subject' : 'Desempenho por matéria';
+  var bars = $('dash-bars'); bars.innerHTML = '';
+  SUBJECTS.forEach(function(s){
+    var b = st.bySubject[s] || {total:0, correct:0, wrong:0};
+    var val = pct(b.correct||0, b.total||0);
+    var row = document.createElement('div'); row.className = 'mini-row';
+    row.innerHTML = '<span>'+subjectName(s)+'</span><span class="mini-track"><span class="mini-fill progress-'+s+'" style="width:'+val+'%"></span></span><span>'+val+'%</span>';
+    bars.appendChild(row);
+  });
+}
+function recordStats(subj, isCorrect){
+  ensureStats();
+  state.stats.total++;
+  if(isCorrect) state.stats.correct++; else state.stats.wrong++;
+  var b = state.stats.bySubject[subj];
+  b.total++; if(isCorrect) b.correct++; else b.wrong++;
+}
+
+function speakEnglish(txt){
+  if(!('speechSynthesis' in window)){ alert('Áudio não disponível neste navegador.'); return; }
+  try{
+    window.speechSynthesis.cancel();
+    var u = new SpeechSynthesisUtterance(txt);
+    u.lang = 'en-US';
+    u.rate = 0.78;
+    u.pitch = 1.05;
+    window.speechSynthesis.speak(u);
+  }catch(e){ alert('Não foi possível reproduzir o áudio.'); }
+}
 
 // Question format: {q, o:[4 options], a:correct_index, e:explanation}
 const QUESTIONS = {
@@ -703,6 +826,80 @@ log:[
 ]
 };
 
+
+// ════════════════════════════════════════════
+// ENGLISH INITIAL — 1º AO 6º ANO
+// Escrita + áudio via Web Speech API do navegador.
+// ════════════════════════════════════════════
+QUESTIONS.eng = [
+// 1º Ano — Alfabeto, sons e palavras
+[
+{q:"🔊 Ouça e escolha a palavra: cat",say:"cat",o:["cat","dog","sun","book"],a:0,e:"Cat significa gato. Som: cat."},
+{q:"Complete a palavra: B _ _ K",say:"book",o:["OO","AA","EE","OU"],a:0,e:"BOOK = livro. Escrevemos B-O-O-K."},
+{q:"Qual palavra significa sol?",say:"sun",o:["moon","star","sun","rain"],a:2,e:"Sun significa sol."},
+{q:"Escolha a letra inicial de APPLE.",say:"apple",o:["A","B","C","D"],a:0,e:"Apple começa com A."},
+{q:"Qual é a tradução de DOG?",say:"dog",o:["Gato","Cachorro","Pássaro","Peixe"],a:1,e:"Dog significa cachorro."},
+{q:"Escolha a palavra que combina com a imagem mental: 📘",say:"book",o:["ball","book","cat","milk"],a:1,e:"Book significa livro."},
+{q:"Como escrevemos 'mãe' em inglês?",say:"mother",o:["father","mother","sister","brother"],a:1,e:"Mother significa mãe."},
+{q:"🔊 Ouça e escolha: hello",say:"hello",o:["hello","yellow","house","horse"],a:0,e:"Hello é uma saudação: olá."}
+],
+// 2º Ano — Cores, números e família
+[
+{q:"Qual cor é BLUE?",say:"blue",o:["Azul","Vermelho","Verde","Amarelo"],a:0,e:"Blue significa azul."},
+{q:"Como se escreve o número 3 em inglês?",say:"three",o:["one","two","three","four"],a:2,e:"Three = três."},
+{q:"Complete: My name ___ Tété.",say:"My name is Tété",o:["am","is","are","be"],a:1,e:"Usamos: My name is..."},
+{q:"Qual palavra significa PAI?",say:"father",o:["mother","sister","father","baby"],a:2,e:"Father significa pai."},
+{q:"🔊 Ouça e escolha: green",say:"green",o:["gray","green","great","grain"],a:1,e:"Green significa verde."},
+{q:"Como se diz 'eu tenho 6 anos'?",say:"I am six years old",o:["I have six years","I am six years old","I six old","My six years"],a:1,e:"A forma natural é: I am six years old."},
+{q:"Qual é a tradução de RED?",say:"red",o:["Rosa","Roxo","Vermelho","Preto"],a:2,e:"Red significa vermelho."},
+{q:"Escrita correta de 'família' em inglês:",say:"family",o:["famili","family","famely","famyli"],a:1,e:"A escrita correta é FAMILY."}
+],
+// 3º Ano — Frases simples e escola
+[
+{q:"Traduza: I like school.",say:"I like school",o:["Eu gosto da escola.","Eu vou para casa.","Eu tenho uma caneta.","Eu sou professora."],a:0,e:"I like school = Eu gosto da escola."},
+{q:"Complete: This is ___ pencil.",say:"This is my pencil",o:["my","me","I","mine"],a:0,e:"This is my pencil = Este é meu lápis."},
+{q:"Qual palavra significa PROFESSORA/PROFESSOR?",say:"teacher",o:["student","teacher","classroom","notebook"],a:1,e:"Teacher significa professor/professora."},
+{q:"🔊 Ouça e escolha: classroom",say:"classroom",o:["classroom","bathroom","bedroom","living room"],a:0,e:"Classroom significa sala de aula."},
+{q:"Como se diz 'bom dia' em inglês?",say:"good morning",o:["good night","good morning","good bye","good evening"],a:1,e:"Good morning = bom dia."},
+{q:"Escolha a frase correta:",say:"I have a book",o:["I has a book","I have a book","I am a book","I book have"],a:1,e:"Com I usamos have: I have a book."},
+{q:"Qual é o plural de BOOK?",say:"books",o:["bookes","bookies","books","book"],a:2,e:"Plural simples: book + s = books."},
+{q:"Traduza: Open the door.",say:"Open the door",o:["Abra a porta.","Feche a janela.","Leia o livro.","Sente-se."],a:0,e:"Open the door = Abra a porta."}
+],
+// 4º Ano — Rotina, animais e perguntas
+[
+{q:"Complete: I wake up ___ 7 o'clock.",say:"I wake up at seven o'clock",o:["in","on","at","to"],a:2,e:"Para horário usamos AT: at 7 o'clock."},
+{q:"Como perguntamos 'Qual é seu nome?'",say:"What is your name?",o:["Where is your name?","What is your name?","Who your name?","How name you?"],a:1,e:"What is your name? = Qual é seu nome?"},
+{q:"Qual animal é HORSE?",say:"horse",o:["Cavalo","Vaca","Porco","Galinha"],a:0,e:"Horse significa cavalo."},
+{q:"🔊 Ouça e escolha: chicken",say:"chicken",o:["kitchen","chicken","children","cheese"],a:1,e:"Chicken significa galinha/frango."},
+{q:"Traduza: I brush my teeth.",say:"I brush my teeth",o:["Eu tomo banho.","Eu escovo meus dentes.","Eu tomo café.","Eu durmo cedo."],a:1,e:"Brush my teeth = escovar meus dentes."},
+{q:"Escolha a resposta para: How are you?",say:"How are you? I am fine.",o:["I am fine.","I am Brazil.","I am seven.","It is red."],a:0,e:"How are you? pode ser respondido com I am fine."},
+{q:"Como se escreve 'janela' em inglês?",say:"window",o:["door","window","wall","floor"],a:1,e:"Window significa janela."},
+{q:"Qual frase está correta?",say:"She likes apples",o:["She like apples","She likes apples","She liking apples","She apple likes"],a:1,e:"Com he/she/it no presente, geralmente adicionamos S: likes."}
+],
+// 5º Ano — Leitura curta e escrita
+[
+{q:"Leia: 'Tom has a dog. The dog is black.' Qual é a cor do cachorro?",say:"Tom has a dog. The dog is black.",o:["White","Black","Blue","Green"],a:1,e:"The dog is black = O cachorro é preto."},
+{q:"Complete: Yesterday, I ___ soccer.",say:"Yesterday, I played soccer",o:["play","plays","played","playing"],a:2,e:"Yesterday indica passado. Usamos played."},
+{q:"Qual é a pergunta correta para saber idade?",say:"How old are you?",o:["How are old you?","How old are you?","What old are you?","Where old you?"],a:1,e:"How old are you? = Quantos anos você tem?"},
+{q:"🔊 Ouça e escolha: beautiful",say:"beautiful",o:["beautiful","because","before","between"],a:0,e:"Beautiful significa bonito/bonita."},
+{q:"Traduza: I can read and write.",say:"I can read and write",o:["Eu posso ler e escrever.","Eu quero comer e dormir.","Eu gosto de correr.","Eu estudo matemática."],a:0,e:"Can = posso/consigo."},
+{q:"Escolha a escrita correta:",say:"because",o:["becaus","because","becouse","bicause"],a:1,e:"A escrita correta é BECAUSE."},
+{q:"Complete: There ___ two books on the table.",say:"There are two books on the table",o:["is","are","am","be"],a:1,e:"Two books é plural: There are."},
+{q:"Qual palavra é um verbo?",say:"run",o:["happy","table","run","green"],a:2,e:"Run é verbo: correr."}
+],
+// 6º Ano — Conversação inicial e produção textual
+[
+{q:"Escolha a frase mais natural:",say:"I would like a glass of water, please",o:["I want water now","I would like a glass of water, please","Give water to me","Water I like"],a:1,e:"A forma educada é: I would like a glass of water, please."},
+{q:"Complete: If it rains, I ___ stay home.",say:"If it rains, I will stay home",o:["will","was","did","am"],a:0,e:"Usamos will para futuro: I will stay home."},
+{q:"Traduza: She is taller than her brother.",say:"She is taller than her brother",o:["Ela é mais baixa que o irmão.","Ela é mais alta que o irmão.","Ela é tão alta quanto o irmão.","Ela tem um irmão alto."],a:1,e:"Taller than = mais alta que."},
+{q:"🔊 Ouça e escolha: Where do you live?",say:"Where do you live?",o:["What do you like?","Where do you live?","When do you study?","Why do you run?"],a:1,e:"Where do you live? = Onde você mora?"},
+{q:"Qual resposta combina com: What do you like to eat?",say:"What do you like to eat? I like rice and beans.",o:["I am twelve.","I live in Brazil.","I like rice and beans.","It is Monday."],a:2,e:"A pergunta é sobre comida; a resposta correta fala do que gosta de comer."},
+{q:"Escolha a escrita correta do passado de GO:",say:"went",o:["goed","went","goes","going"],a:1,e:"Go é irregular: passado = went."},
+{q:"Complete: I have studied English ___ two years.",say:"I have studied English for two years",o:["for","since","during","at"],a:0,e:"Para duração usamos for: for two years."},
+{q:"Produção escrita: qual frase está completa?",say:"My favorite subject is English because it is fun",o:["My favorite subject English","My favorite subject is English because it is fun","Favorite English because fun","I subject English fun"],a:1,e:"A frase completa tem sujeito, verbo e complemento."}
+]
+];
+
 // ════════════════════════════════════════════
 // STATE
 // ════════════════════════════════════════════
@@ -712,6 +909,7 @@ const state = {
     sci:  {lvl: 0, stars: [0,0,0,0,0]},
     bio:  {lvl: 0, stars: [0,0,0,0,0]},
     log:  {lvl: 0, stars: [0,0,0,0,0]},
+    eng:  {lvl: 0, stars: [0,0,0,0,0,0]},
   },
   currentSubject: null,
   currentLevel: null,
@@ -722,12 +920,14 @@ const state = {
   answered: false,
   streak: 0,
   lastDate: null,
+  stats: {total:0, correct:0, wrong:0, bySubject:{}},
+  lastSession: [],
   lang: localStorage.getItem('estudos_da_tete_lang') || 'pt',
 };
 
 const PASS_THRESHOLD = 6; // out of 8
 const QS_PER_QUIZ = 8;
-const STORAGE_KEY = 'estudos_da_tete_v11';
+const STORAGE_KEY = 'estudos_da_tete_v12';
 
 // ════════════════════════════════════════════
 // HELPERS
@@ -742,7 +942,7 @@ function $ (id) { return document.getElementById(id); }
 function show(id) { $(id).classList.add('active'); }
 function hide(id) { $(id).classList.remove('active'); }
 function setScreen(id) {
-  ['home','subj-screen','quiz-screen','result-screen'].forEach(s => hide(s));
+  ['home','subj-screen','quiz-screen','result-screen','review-screen'].forEach(s => hide(s));
   show(id);
   window.scrollTo(0,0);
 }
@@ -762,9 +962,13 @@ function applyLanguage(){
   if($('streak-days')) $('streak-days').textContent = text('days');
   if($('bilingual-note')) $('bilingual-note').textContent = text('note');
   if($('home-footer')) $('home-footer').textContent = text('footer');
-  ['math','sci','bio','log'].forEach(function(s){ if($('name-'+s)) $('name-'+s).textContent = subjectName(s); });
+  SUBJECTS.forEach(function(s){ if($('name-'+s)) $('name-'+s).textContent = subjectName(s); });
   if($('level-up-title')) $('level-up-title').textContent = text('unlockedTitle');
   if($('home-btn')) $('home-btn').textContent = text('home');
+  if($('home-btn-result')) $('home-btn-result').textContent = text('home');
+  if($('review-btn')) $('review-btn').textContent = lang()==='en' ? '📚 Review questions' : '📚 Revisar questões';
+  if($('review-title')) $('review-title').textContent = lang()==='en' ? '📚 Review' : '📚 Revisão';
+  if($('review-sub')) $('review-sub').textContent = lang()==='en' ? 'See correct answers, mistakes and explanations.' : 'Veja acertos, erros e explicações.';
   renderHome();
   if(document.getElementById('subj-screen').classList.contains('active') && state.currentSubject) openSubject(state.currentSubject);
 }
@@ -778,6 +982,10 @@ function loadProgress() {
     if(data && typeof data.streak === 'number') state.streak = data.streak;
     if(data && data.lastDate) state.lastDate = data.lastDate;
     if(data && data.lang) state.lang = data.lang;
+    if(data && data.stats) state.stats = data.stats;
+    if(data && data.lastSession) state.lastSession = data.lastSession;
+    ensureProgress();
+    ensureStats();
   } catch(e) {
     console.warn('Não foi possível carregar o progresso salvo:', e);
   }
@@ -788,7 +996,9 @@ function saveProgress() {
       prog: state.prog,
       streak: state.streak,
       lastDate: state.lastDate,
-      lang: state.lang
+      lang: state.lang,
+      stats: state.stats,
+      lastSession: state.lastSession
     }));
   } catch(e) {
     console.warn('Não foi possível salvar o progresso:', e);
@@ -799,14 +1009,15 @@ function saveProgress() {
 // HOME
 // ════════════════════════════════════════════
 function renderHome() {
-  const subs = ['math','sci','bio','log'];
+  ensureProgress();
+  const subs = SUBJECTS;
   subs.forEach(s => {
     const lvl = state.prog[s].lvl;
     const stars = state.prog[s].stars;
-    $(`grade-${s}`).textContent = gradeName(lvl);
+    $(`grade-${s}`).textContent = gradeName(lvl, s);
     const dotsEl = $(`dots-${s}`);
     dotsEl.innerHTML = '';
-    for(let i=0;i<5;i++){
+    for(let i=0;i<levelCount(s);i++){
       const d = document.createElement('div');
       d.className = 'level-dot';
       if(i < lvl) d.classList.add('done');
@@ -816,6 +1027,7 @@ function renderHome() {
   });
   $('streak-count').textContent = state.streak;
   updateStreak();
+  updateDashboard();
 }
 
 function updateStreak() {
@@ -829,16 +1041,16 @@ function updateStreak() {
 // ════════════════════════════════════════════
 function openSubject(subj) {
   state.currentSubject = subj;
-  const colors = {math:'var(--math)',sci:'var(--sci)',bio:'var(--bio)',log:'var(--log)'};
+  const colors = {math:'var(--math)',sci:'var(--sci)',bio:'var(--bio)',log:'var(--log)',eng:'var(--eng)'};
   $('subj-hdr').style.background = `linear-gradient(135deg,${colors[subj]},${colors[subj]}CC)`;
   $('subj-title-text').textContent = subjectName(subj);
-  $('subj-sub-text').textContent = `${gradeName(state.prog[subj].lvl)} ${text('current')} • ${text('totalLevels')}`;
+  $('subj-sub-text').textContent = `${gradeName(state.prog[subj].lvl, subj)} ${text('current')} • ${levelCount(subj)} níveis / levels`;
   $('subj-icon-big').textContent = ICONS[subj];
 
   const path = $('level-path');
   path.innerHTML = '';
   const cls = subj;
-  for(let i=0;i<5;i++){
+  for(let i=0;i<levelCount(subj);i++){
     const prog = state.prog[subj];
     const isUnlocked = i <= prog.lvl;
     const isCompleted = i < prog.lvl;
@@ -859,7 +1071,7 @@ function openSubject(subj) {
 
     const title = document.createElement('div');
     title.className = 'node-title';
-    title.textContent = gradeName(i);
+    title.textContent = gradeName(i, subj);
 
     const topic = document.createElement('div');
     topic.className = 'node-topic';
@@ -914,11 +1126,12 @@ function startQuiz(subj, level) {
   state.correct = 0;
   state.wrong = 0;
   state.answered = false;
+  state.lastSession = [];
 
   const cls = subj;
   $('q-icon').textContent = ICONS[subj];
   $('q-subj-name').textContent = subjectName(subj);
-  $('q-lvl-name').textContent = `${gradeName(level)} — ${topicName(subj,level)}`;
+  $('q-lvl-name').textContent = `${gradeName(level, subj)} — ${topicName(subj,level)}`;
 
   const fill = $('prog-fill');
   fill.className = `progress-fill progress-${cls}`;
@@ -939,7 +1152,19 @@ function renderQuestion() {
   const pct = (state.qIndex / QS_PER_QUIZ) * 100;
   $('prog-fill').style.width = pct + '%';
 
-  $('question-text').textContent = q.q;
+  var qt = $('question-text');
+  qt.textContent = q.q;
+  if(state.currentSubject === 'eng'){
+    var br = document.createElement('br');
+    var audioBtn = document.createElement('button');
+    audioBtn.className = 'audio-btn';
+    audioBtn.type = 'button';
+    audioBtn.textContent = text('listen');
+    audioBtn.title = text('audioHelp');
+    audioBtn.onclick = function(e){ e.stopPropagation(); speakEnglish(q.say || q.q); };
+    qt.appendChild(br);
+    qt.appendChild(audioBtn);
+  }
 
   const grid = $('options-grid');
   grid.innerHTML = '';
@@ -962,6 +1187,8 @@ function selectAnswer(idx) {
 
   const q = state.questions[state.qIndex];
   const isCorrect = idx === q.a;
+  recordStats(state.currentSubject, isCorrect);
+  state.lastSession.push({subject:state.currentSubject, level:state.currentLevel, q:q.q, answer:q.o[idx], correct:q.o[q.a], ok:isCorrect, e:q.e, say:q.say||''});
   const btns = document.querySelectorAll('.option-btn');
 
   btns.forEach((btn, i) => {
@@ -982,6 +1209,7 @@ function selectAnswer(idx) {
   $('wrong-count').textContent = state.wrong;
   $('next-btn').className = 'next-btn visible';
   $('next-btn').textContent = state.qIndex + 1 < QS_PER_QUIZ ? text('next') : text('result');
+  saveProgress();
 }
 
 function nextQuestion() {
@@ -1013,7 +1241,7 @@ function showResult() {
 
   // Level up if passed and not already beyond
   let levelUp = false;
-  if(passed && level === prog.lvl && prog.lvl < 4) {
+  if(passed && level === prog.lvl && prog.lvl < maxLevelIndex(subj)) {
     prog.lvl++;
     levelUp = true;
   }
@@ -1032,7 +1260,7 @@ function showResult() {
   saveProgress();
 
   // Render result screen
-  const colors = {math:'var(--math)',sci:'var(--sci)',bio:'var(--bio)',log:'var(--log)'};
+  const colors = {math:'var(--math)',sci:'var(--sci)',bio:'var(--bio)',log:'var(--log)',eng:'var(--eng)'};
   const scoreCircle = $('score-circle');
   scoreCircle.style.background = `linear-gradient(135deg,${colors[subj]},${colors[subj]}AA)`;
 
@@ -1057,13 +1285,13 @@ function showResult() {
     $('result-title').textContent = text('almostThere');
   }
 
-  $('result-sub').textContent = `${score} ${text('of')} ${total} ${text('rightAnswers')} — ${gradeName(level)} — ${subjectName(subj)}`;
+  $('result-sub').textContent = `${score} ${text('of')} ${total} ${text('rightAnswers')} — ${gradeName(level, subj)} — ${subjectName(subj)}`;
 
   // Level up banner
   const banner = $('level-up-banner');
   if(levelUp) {
     banner.className = 'level-up-banner visible';
-    $('level-up-text').textContent = `${text('unlocked')} ${gradeName(prog.lvl)} — ${subjectName(subj)}! ${text('keepGoing')}`;
+    $('level-up-text').textContent = `${text('unlocked')} ${gradeName(prog.lvl, subj)} — ${subjectName(subj)}! ${text('keepGoing')}`;
   } else {
     banner.className = 'level-up-banner';
   }
@@ -1080,7 +1308,7 @@ function showResult() {
   // Action button
   const actionBtn = $('result-action-btn');
   if(passed && levelUp) {
-    actionBtn.textContent = `${text('tryLevel')} ${gradeName(prog.lvl)}!`;
+    actionBtn.textContent = `${text('tryLevel')} ${gradeName(prog.lvl, subj)}!`;
   } else if(passed) {
     actionBtn.textContent = text('playAgain');
   } else {
@@ -1090,6 +1318,28 @@ function showResult() {
   setScreen('result-screen');
 
   if(passed && stars >= 2) launchConfetti();
+}
+
+
+function openReview(){
+  var list = $('review-list');
+  list.innerHTML = '';
+  var arr = state.lastSession || [];
+  if(!arr.length){
+    list.innerHTML = '<div class="review-empty">'+(lang()==='en'?'No questions to review yet.':'Ainda não há questões para revisar.')+'</div>';
+    setScreen('review-screen'); return;
+  }
+  arr.forEach(function(item, idx){
+    var card = document.createElement('div');
+    card.className = 'review-card' + (item.ok ? '' : ' wrong');
+    var audio = '';
+    if(item.subject === 'eng' && item.say){ audio = '<button class="audio-btn" onclick="speakEnglish(\''+String(item.say).replace(/'/g,'&#39;')+'\')">'+text('listen')+'</button>'; }
+    card.innerHTML = '<div class="review-q">'+(idx+1)+'. '+item.q+'</div>' +
+      '<div class="review-meta">'+(item.ok?'✅ ':'❌ ')+(lang()==='en'?'Your answer: ':'Sua resposta: ')+item.answer+'<br>✅ '+(lang()==='en'?'Correct answer: ':'Resposta correta: ')+item.correct+'</div>' +
+      '<div class="review-exp">'+item.e+'</div>' + audio;
+    list.appendChild(card);
+  });
+  setScreen('review-screen');
 }
 
 function resultAction() {
@@ -1132,6 +1382,8 @@ function launchConfetti() {
 // INIT
 // ════════════════════════════════════════════
 loadProgress();
+ensureProgress();
+ensureStats();
 applyLanguage();
 renderHome();
 setScreen('home');

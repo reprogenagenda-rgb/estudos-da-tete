@@ -1,8 +1,9 @@
-const CACHE_NAME = 'estudos-da-tete-v1.1.0';
+const CACHE_NAME = 'estudos-da-tete-v1.2.0';
 const ASSETS = [
   './',
   './index.html',
   './manifest.json',
+  './service-worker.js',
   './icons/icon-192.png',
   './icons/icon-512.png'
 ];
@@ -23,7 +24,7 @@ self.addEventListener('fetch', function(event){
   if (event.request.method !== 'GET') return;
   event.respondWith(caches.match(event.request).then(function(cached){
     return cached || fetch(event.request).then(function(response){
-      const copy = response.clone();
+      var copy = response.clone();
       caches.open(CACHE_NAME).then(function(cache){ cache.put(event.request, copy); });
       return response;
     }).catch(function(){ return caches.match('./index.html'); });
